@@ -1,5 +1,6 @@
 from rest_framework import serializers
-from .models import Student, StudentLogin
+
+from .models import Student
 
 
 class StudentSerializer(serializers.ModelSerializer):
@@ -16,9 +17,3 @@ class StudentSerializer(serializers.ModelSerializer):
             "is_dismissed",
             "is_graduated",
         ]
-
-
-class StudentLoginSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = StudentLogin
-        fields = ["student"]

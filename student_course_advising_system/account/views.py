@@ -1,12 +1,11 @@
-from django.shortcuts import render
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from .models import StudentLogin
-from .serializers import StudentLoginSerializer
-from django.contrib.auth.hashers import check_password, make_password
-from .models import Student
+
+from django.contrib.auth.hashers import make_password
+
 from utils.helpers import try_catch
+from .models import Student, StudentLogin, StudentOtp
 
 
 class LoginStudent(APIView):
@@ -32,7 +31,7 @@ class LoginStudent(APIView):
                 status=status.HTTP_401_UNAUTHORIZED,
             )
 
-        if not check_password(password, student_login.password):
+        if not student_login.check_password(password):
             return Response(
                 {"detail": "Invalid student_id or password."},
                 status=status.HTTP_401_UNAUTHORIZED,
@@ -88,12 +87,13 @@ class ActivateStudent(APIView):
                 status=status.HTTP_401_UNAUTHORIZED,
             )
 
-        hashed_password = make_password(password)
+        Student_otp, created = StudentOtp.objects.get_or_create(student=student)
+        Student_otp.create_or_refresh_otp()
 
         _, err = try_catch(
             StudentLogin.objects.update_or_create,
             student=student,
-            defaults={"password": hashed_password},
+            defaults={"password": make_password(password)},
         )
         if err.not_ok():
             return Response(
