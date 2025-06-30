@@ -1,8 +1,24 @@
 from rest_framework import serializers
-from .models import StudentLogin
+from .models import Student, StudentLogin
+
+
+class StudentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Student
+        fields = [
+            "student_id",
+            "first_name",
+            "last_name",
+            "email",
+            "phone_no",
+            "guardian_name",
+            "guardian_phone",
+            "is_dismissed",
+            "is_graduated",
+        ]
+
 
 class StudentLoginSerializer(serializers.ModelSerializer):
     class Meta:
         model = StudentLogin
-        fields = ['studentId', 'email', 'password']
-        extra_kwargs = {'password': {'write_only': True}} 
+        fields = ["student"]
