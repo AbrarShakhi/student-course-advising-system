@@ -13,15 +13,13 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 from pathlib import Path
 import environ, os
 
-env = environ.Env(
-    DEBUG=(bool, False)  # default to False if not set
-)
+env = environ.Env(DEBUG=(bool, False))  # default to False if not set
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # load Environment variables
-environ.Env.read_env(os.path.join(BASE_DIR, "..", '.env'))
+environ.Env.read_env(os.path.join(BASE_DIR, "..", ".env"))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
@@ -32,10 +30,10 @@ SECRET_KEY = "django-insecure-d2e4)gjhq$s_sexw2@%fj(_minzt4w4hfj%ltw)!^qz@5^(9nq
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env.bool("DEBUG")
 
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
+ALLOWED_HOSTS = ["127.0.0.1", "localhost"]
 
 # Disable APPEND_SLASH to prevent POST redirect issues
-APPEND_SLASH = False
+# APPEND_SLASH = False
 
 
 # Application definition
@@ -129,6 +127,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
 STATIC_URL = "static/"
+STATIC_ROOT = BASE_DIR / "staticfiles"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
