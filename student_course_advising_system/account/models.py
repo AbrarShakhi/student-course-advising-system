@@ -78,6 +78,9 @@ class StudentOtp(models.Model):
         return self.otp
 
     def compare_otp(self, raw_otp):
+        if self.otp is None or self.created_at is None or self.expires_at is None:
+            return False
+
         if self.get_otp() == raw_otp:
             self.otp = None
             self.created_at = None

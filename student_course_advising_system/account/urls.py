@@ -10,5 +10,6 @@ urlpatterns = format_suffix_patterns(
         path("login", views.LoginStudent.as_view(), name="LoginStudent"),
         path("logout", views.LogoutStudent.as_view(), name="LogoutStudent"),
         path("activate", views.ActivateStudent.as_view(), name="ActivateStudent"),
+        path("send-otp", views.SendOTP.as_view(), name="SendOTP"),
     ]
 )
