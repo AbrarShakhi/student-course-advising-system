@@ -11,8 +11,8 @@ from .models import Student, StudentLogin, StudentOtp
 class LoginStudent(APIView):
     def post(self, request, format=None):
         student_id = request.data.get("student_id")
-        password = request.data.get("password")
-        if not student_id or not password:
+        raw_password = request.data.get("password")
+        if not student_id or not raw_password:
             return Response(
                 {"detail": "student_id and password are required."},
                 status=status.HTTP_400_BAD_REQUEST,
@@ -31,7 +31,7 @@ class LoginStudent(APIView):
                 status=status.HTTP_401_UNAUTHORIZED,
             )
 
-        if not student_login.check_password(password):
+        if not student_login.check_password(raw_password):
             return Response(
                 {"detail": "Invalid student_id or password."},
                 status=status.HTTP_401_UNAUTHORIZED,
@@ -52,15 +52,16 @@ class LogoutStudent(APIView):
 class ActivateStudent(APIView):
     def post(self, request, format=None):
         student_id = request.data.get("student_id")
-        password = request.data.get("password")
+        raw_otp = request.data.get("otp")
+        raw_password = request.data.get("password")
 
-        if not student_id or not password:
+        if not student_id or not raw_password or not raw_otp:
             return Response(
-                {"detail": "student_id and password are required."},
+                {"detail": "student_id and password and otp are required."},
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
-        if len(password) <= 8:
+        if len(raw_password) <= 8:
             return Response(
                 {"detail": "Password must be greater than 8 characters."},
                 status=status.HTTP_401_UNAUTHORIZED,
@@ -87,13 +88,16 @@ class ActivateStudent(APIView):
                 status=status.HTTP_401_UNAUTHORIZED,
             )
 
-        Student_otp, created = StudentOtp.objects.get_or_create(student=student)
-        Student_otp.create_or_refresh_otp()
+        Student_otp, _ = StudentOtp.objects.get_or_create(student=student)
+        if Student_otp.compare_otp(raw_otp):
+            return Response(
+                {"detail": "Invalid OTP."}, status=status.HTTP_401_UNAUTHORIZED
+            )
 
         _, err = try_catch(
             StudentLogin.objects.update_or_create,
             student=student,
-            defaults={"password": make_password(password)},
+            defaults={"password": make_password(raw_password)},
         )
         if err.not_ok():
             return Response(
