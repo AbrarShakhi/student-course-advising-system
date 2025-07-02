@@ -3,10 +3,9 @@ from rest_framework.response import Response
 from rest_framework import status
 
 from django.contrib.auth.hashers import make_password
-from django.conf import settings
 
-from common.try_catch import try_catch
 from common.emailer import Emailer
+from common import responses
 
 from .utils import check_student_login_ability, check_student_account
 from .models import StudentLogin, StudentOtp
@@ -17,43 +16,30 @@ class LoginStudent(APIView):
         student_id = request.data.get("student_id")
         raw_password = request.data.get("password")
         if not student_id or not raw_password:
-            return Response(
-                {"message": "student_id and password are required."},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
+            return responses.missing_fields(["student_id", "password"])
 
         student, student_login = check_student_account(student_id)
         if student is None:
-            return Response(
-                {"message": "Student does not exist."}, status=status.HTTP_404_NOT_FOUND
-            )
+            return responses.student_not_exist()
 
         is_able, message = check_student_login_ability(student)
         if not is_able:
-            return Response(message, status=status.HTTP_401_UNAUTHORIZED)
+            return responses.not_eligible(message)
 
         if student_login is None:
-            return Response(
-                {"message": "Account is not activated."},
-                status=status.HTTP_401_UNAUTHORIZED,
-            )
+            return responses.account_not_activated()
 
         if not student_login.check_password(raw_password):
-            return Response(
-                {"message": "Invalid student_id or password."},
-                status=status.HTTP_401_UNAUTHORIZED,
-            )
+            return responses.invalid_password()
 
-        response = Response({"message": "Login successful."}, status=status.HTTP_200_OK)
+        response = responses.login_success()
         response.set_cookie("student_id", student_id, httponly=True)
         return response
 
 
 class LogoutStudent(APIView):
     def get(self, format=None):
-        response = Response(
-            {"message": "Logout successful."}, status=status.HTTP_200_OK
-        )
+        response = responses.logout_success()
         response.delete_cookie("student_id")
         return response
 
@@ -64,53 +50,38 @@ class ActivateStudent(APIView):
         raw_otp = request.data.get("otp")
         raw_password = request.data.get("password")
         if not student_id or not raw_password or not raw_otp:
-            return Response(
-                {"message": "student_id and password and otp are required."},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
+            return responses.missing_fields(["student_id", "password", "otp"])
 
-        if len(raw_password) <= 8:
-            return Response(
-                {"message": "Password must be greater than 8 characters."},
-                status=status.HTTP_401_UNAUTHORIZED,
-            )
+        if len(raw_password) < 8:
+            return responses.password_too_short()
 
         student, student_login = check_student_account(student_id)
         if student is None:
-            return Response(
-                {"message": "Student does not exist."}, status=status.HTTP_404_NOT_FOUND
-            )
+            return responses.student_not_exist()
 
         is_able, message = check_student_login_ability(student)
         if not is_able:
-            return Response(message, status=status.HTTP_401_UNAUTHORIZED)
+            return responses.not_eligible(message)
 
         if student_login is not None:
-            return Response(
-                {"message": "Account is already activated."},
-                status=status.HTTP_401_UNAUTHORIZED,
-            )
+            return responses.account_already_activated()
 
-        student_otp, err = try_catch(StudentOtp.objects.get, student=student)
-        if err.not_ok() or not student_otp.compare_otp(raw_otp):
-            return Response(
-                {"message": "Invalid OTP."}, status=status.HTTP_401_UNAUTHORIZED
-            )
+        try:
+            student_otp = StudentOtp.objects.get(student=student)
+        except StudentOtp.DoesNotExist:
+            return responses.invalid_otp()
+        if student_otp.compare_otp(raw_otp) is False:
+            return responses.invalid_otp()
 
-        _, err = try_catch(
-            StudentLogin.objects.update_or_create,
-            student=student,
-            defaults={"password": make_password(raw_password)},
-        )
-        if err.not_ok():
-            return Response(
-                {"message": f"Error creating account: {student_id}"},
-                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+        hashed_password = make_password(raw_password)
+        try:
+            StudentLogin.objects.update_or_create(
+                student=student, defaults={"password": hashed_password}
             )
+        except Exception as e:
+            return responses.error_creating_account(student_id)
 
-        return Response(
-            {"message": "Account activated successfully."}, status=status.HTTP_200_OK
-        )
+        return responses.account_activated()
 
 
 class SendOTP(APIView):
@@ -120,54 +91,54 @@ class SendOTP(APIView):
         student_id = request.data.get("student_id")
         reason_id = request.GET.get("reason_id")
         if not student_id or not reason_id:
-            return Response(
-                {"message": "student_id and reason_id are required."},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
+            return responses.missing_fields(["student_id", "reason_id"])
 
-        reason_id, err = try_catch(int, reason_id)
-        if err.not_ok() or reason_id not in self.reason_ids.keys():
-            return Response(
-                {"message": "Invalid reason_id."},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
+        try:
+            reason_id = int(reason_id)
+        except ValueError:
+            return responses.invalid_value("reason_id")
+
+        if reason_id not in self.reason_ids.keys():
+            return responses.invalid_value("reason_id")
 
         student, student_login = check_student_account(student_id)
         if student is None:
-            return Response(
-                {"message": "Student does not exist."}, status=status.HTTP_404_NOT_FOUND
-            )
+            return responses.student_not_exist()
 
         is_able, message = check_student_login_ability(student)
         if not is_able:
-            return Response(message, status=status.HTTP_401_UNAUTHORIZED)
+            return responses.not_eligible(message)
 
-        student_otp, err = try_catch(StudentOtp.objects.get, student=student)
-        if err.not_ok() and err.is_type(StudentOtp.DoesNotExist):
-            student_otp, err = try_catch(StudentOtp.objects.create, student=student)
-            if err.not_ok():
-                return Response(
-                    {"message": f"Error creating OTP: {student_id}"},
-                    status=status.HTTP_500_INTERNAL_SERVER_ERROR,
-                )
+        if reason_id == 2:
+            if student_login is not None:
+                return responses.account_already_activated()
+        elif reason_id == 1:
+            if student_login is None:
+                return responses.account_not_activated()
 
-        student_otp.refresh_otp()
-        db_otp = student_otp.get_otp()
+        try:
+            try:
+                student_otp = StudentOtp.objects.get(student=student)
+            except StudentOtp.DoesNotExist:
+                try:
+                    student_otp = StudentOtp.objects.create(student=student)
+                except Exception:
+                    return responses.error_generating_otp(student_id)
 
-        emailer, err = try_catch(Emailer, student.email, self.reason_ids[reason_id])
-        if err.not_ok():
-            return Response(
-                {"message": f"Error sending OTP: {student_id}"},
-                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            )
+            if student_otp is None:
+                return responses.error_generating_otp(student_id)
 
-        _, err = try_catch(emailer.send, db_otp)
-        if err.not_ok():
-            print(f"Error sending OTP: {err}")
-            return Response(
-                {"message": f"Error sending OTP: {student_id}"},
-                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            )
-        return Response(
-            {"message": "OTP sent successfully."}, status=status.HTTP_200_OK
-        )
+            db_otp = student_otp.get_otp()
+            if db_otp is None:
+                return responses.error_generating_otp(student_id)
+        except Exception:
+            return responses.error_generating_otp(student_id)
+
+        emailer = Emailer(student.email, self.reason_ids[reason_id])
+
+        try:
+            emailer.send(db_otp)
+        except Exception as e:
+            return responses.error_sending_otp(student_id)
+
+        return responses.otp_sent(db_otp)

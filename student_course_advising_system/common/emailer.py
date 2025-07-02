@@ -12,10 +12,6 @@ class Emailer:
     def __init__(self, sender: str, reason: str):
         self.sender = sender
         self.reason = reason
-        if reason not in REASON_SUBJECTS:
-            raise ValueError(
-                f"Invalid reason: {reason}. Must be one of {list(REASON_SUBJECTS.keys())}."
-            )
         self.subject = REASON_SUBJECTS.get(self.reason)
         self.yag = yagmail.SMTP(settings.EMAIL_ADDR, settings.EMAIL_PASSWORD)
 

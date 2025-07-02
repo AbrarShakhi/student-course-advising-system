@@ -63,10 +63,10 @@ class StudentOtp(models.Model):
 
     def refresh_otp(self):
         if (
-            not self.otp
-            or not self.created_at
-            or not self.expires_at
-            or not self.try_count
+            self.otp is None
+            or self.created_at is None
+            or self.expires_at is None
+            or self.try_count is None
         ):
             self.reset_otp()
 
@@ -98,7 +98,7 @@ class StudentOtp(models.Model):
 
     def is_expired(self):
         return (
-            not self.expires_at
+            self.expires_at is None
             or timezone.now() > self.expires_at
             or self.try_count >= self.MAX_TRIES
         )
