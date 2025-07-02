@@ -5,7 +5,9 @@ from rest_framework import status
 from django.contrib.auth.hashers import make_password
 from django.conf import settings
 
-from utils.helpers import try_catch
+from common.try_catch import try_catch
+from common.emailer import Emailer
+
 from .utils import check_student_login_ability, check_student_account
 from .models import StudentLogin, StudentOtp
 
@@ -140,11 +142,32 @@ class SendOTP(APIView):
         if not is_able:
             return Response(message, status=status.HTTP_401_UNAUTHORIZED)
 
-        student_otp, err = try_catch(StudentOtp.objects.create, student=student)
+        student_otp, err = try_catch(StudentOtp.objects.get, student=student)
+        if err.not_ok() and err.is_type(StudentOtp.DoesNotExist):
+            student_otp, err = try_catch(StudentOtp.objects.create, student=student)
+            if err.not_ok():
+                return Response(
+                    {"message": f"Error creating OTP: {student_id}"},
+                    status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                )
+
+        student_otp.refresh_otp()
+        db_otp = student_otp.get_otp()
+
+        emailer, err = try_catch(Emailer, student.email, self.reason_ids[reason_id])
         if err.not_ok():
             return Response(
                 {"message": f"Error sending OTP: {student_id}"},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR,
             )
-        student_otp.refresh_otp()
-        db_otp = student_otp.otp()
+
+        _, err = try_catch(emailer.send, db_otp)
+        if err.not_ok():
+            print(f"Error sending OTP: {err}")
+            return Response(
+                {"message": f"Error sending OTP: {student_id}"},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            )
+        return Response(
+            {"message": "OTP sent successfully."}, status=status.HTTP_200_OK
+        )

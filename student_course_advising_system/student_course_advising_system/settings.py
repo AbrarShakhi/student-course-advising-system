@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 
 from pathlib import Path
 import environ, os
+from django.core.exceptions import ImproperlyConfigured
 
 env = environ.Env(DEBUG=(bool, False))  # default to False if not set
 
@@ -31,8 +32,13 @@ SECRET_KEY = "django-insecure-d2e4)gjhq$s_sexw2@%fj(_minzt4w4hfj%ltw)!^qz@5^(9nq
 DEBUG = env.bool("DEBUG")
 
 # yagmail
-EMAIL_ADDR = env.str("EMAIL_ADDR")
-EMAIL_PASSWORD = env.str("EMAIL_PASSWORD")
+EMAIL_ADDR = env("EMAIL_ADDR")
+EMAIL_PASSWORD = env("EMAIL_PASSWORD")
+if not EMAIL_ADDR or not EMAIL_PASSWORD:
+    raise ImproperlyConfigured(
+        "EMAIL_ADDR and EMAIL_PASSWORD must be set in the environment and not be empty."
+    )
+
 
 ALLOWED_HOSTS = ["127.0.0.1", "localhost"]
 

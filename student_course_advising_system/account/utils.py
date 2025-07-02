@@ -1,5 +1,6 @@
+from common.try_catch import try_catch
+
 from .models import Student, StudentLogin
-from utils.helpers import try_catch
 
 
 def check_student_login_ability(student: Student) -> tuple[bool, dict]:
