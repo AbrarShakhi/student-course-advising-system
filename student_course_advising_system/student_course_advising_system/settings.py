@@ -30,6 +30,10 @@ SECRET_KEY = "django-insecure-d2e4)gjhq$s_sexw2@%fj(_minzt4w4hfj%ltw)!^qz@5^(9nq
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env.bool("DEBUG")
 
+# yagmail
+EMAIL_ADDR = env.str("EMAIL_ADDR")
+EMAIL_PASSWORD = env.str("EMAIL_PASSWORD")
+
 ALLOWED_HOSTS = ["127.0.0.1", "localhost"]
 
 # Disable APPEND_SLASH to prevent POST redirect issues

@@ -7,7 +7,7 @@ from django.conf import settings
 
 from utils.helpers import try_catch
 from .utils import check_student_login_ability, check_student_account
-from .models import Student, StudentLogin, StudentOtp
+from .models import StudentLogin, StudentOtp
 
 
 class LoginStudent(APIView):
@@ -135,10 +135,16 @@ class SendOTP(APIView):
             return Response(
                 {"message": "Student does not exist."}, status=status.HTTP_404_NOT_FOUND
             )
+
         is_able, message = check_student_login_ability(student)
         if not is_able:
             return Response(message, status=status.HTTP_401_UNAUTHORIZED)
 
-        return Response(
-            {"message": "OTP sent successfully."}, status=status.HTTP_200_OK
-        )
+        student_otp, err = try_catch(StudentOtp.objects.create, student=student)
+        if err.not_ok():
+            return Response(
+                {"message": f"Error sending OTP: {student_id}"},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            )
+        student_otp.refresh_otp()
+        db_otp = student_otp.otp()
