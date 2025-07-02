@@ -10,7 +10,9 @@ def check_student_login_ability(student: Student) -> tuple[bool, dict]:
     return True, {}
 
 
-def check_student_account(student_id: None) -> tuple[Student, StudentLogin]:
+def check_student_account(
+    student_id: str,
+) -> tuple[Student | None, StudentLogin | None]:
     student, err = try_catch(Student.objects.get, student_id=student_id)
     if err.not_ok() and err.is_type(Student.DoesNotExist):
         return None, None
