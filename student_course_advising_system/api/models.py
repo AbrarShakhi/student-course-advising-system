@@ -3,8 +3,9 @@ import string
 from datetime import timedelta
 
 from django.db import models
-from django.contrib.auth.hashers import check_password, make_password
 from django.utils import timezone
+
+from common.hashing import hash_password, compare_password
 
 
 class Student(models.Model):
@@ -29,11 +30,11 @@ class StudentLogin(models.Model):
     password = models.CharField(max_length=128)
 
     def change_password(self, raw_password):
-        self.password = make_password(raw_password)
+        self.password = hash_password(raw_password)
         self.save()
 
     def check_password(self, raw_password):
-        return check_password(raw_password, self.password)
+        return compare_password(raw_password, self.password)
 
     def __str__(self):
         return f"{self.student.student_id}"

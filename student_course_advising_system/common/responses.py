@@ -64,6 +64,13 @@ def error_creating_account(student_id):
     )
 
 
+def error_updating_password(student_id):
+    return Response(
+        {"message": f"Error updating password: {student_id}"},
+        status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+    )
+
+
 def error_generating_otp(student_id):
     return Response(
         {"message": f"Error generating OTP: {student_id}"},
@@ -93,7 +100,18 @@ def account_activated():
     )
 
 
-def otp_sent(db_otp):
+def password_updated_successfully():
     return Response(
-        {"message": "OTP sent successfully.", "opt": db_otp}, status=status.HTTP_200_OK
+        {"message": "Password updated successfully."}, status=status.HTTP_200_OK
+    )
+
+
+def otp_sent(db_otp):
+    return Response({"message": "OTP sent successfully."}, status=status.HTTP_200_OK)
+
+
+def authentication_failed():
+    return Response(
+        {"message": "Authentication credentials were not provided or are invalid."},
+        status=status.HTTP_401_UNAUTHORIZED,
     )
