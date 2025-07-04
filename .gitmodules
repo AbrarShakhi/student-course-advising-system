@@ -1,0 +1,3 @@
+[submodule "student-course-advising-frontend"]
+	path = student-course-advising-frontend
+	url = https://github.com/AbrarShakhi/student-course-advising-frontend.git
