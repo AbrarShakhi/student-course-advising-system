@@ -106,7 +106,7 @@ def password_updated_successfully():
     )
 
 
-def otp_sent(db_otp):
+def otp_sent():
     return Response({"message": "OTP sent successfully."}, status=status.HTTP_200_OK)
 
 

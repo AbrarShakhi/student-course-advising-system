@@ -57,11 +57,13 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     ## Third-party apps
     "rest_framework",
+    "corsheaders",
     ## Local apps
     "api",
 ]
 
 MIDDLEWARE = [
+    "corsheaders.middleware.CorsMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -143,3 +145,27 @@ STATIC_ROOT = BASE_DIR / "staticfiles"
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+# CORS Configuration
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:8081",  # Expo development server
+    "http://127.0.0.1:8081",  # Expo development server alternative
+    "http://localhost:3000",  # React development server (if needed)
+    "http://127.0.0.1:3000",  # React development server alternative
+]
+
+# Allow credentials (cookies, authorization headers, etc.)
+CORS_ALLOW_CREDENTIALS = True
+
+# Allow all headers
+CORS_ALLOW_ALL_HEADERS = True
+
+# Allow all methods
+CORS_ALLOW_METHODS = [
+    "DELETE",
+    "GET",
+    "OPTIONS",
+    "PATCH",
+    "POST",
+    "PUT",
+]

@@ -178,8 +178,8 @@ class SendOTP(APIView):
             emailer.send(db_otp)
         except Exception as e:
             return responses.error_sending_otp(student_id)
-
-        return responses.otp_sent(db_otp)
+        print(db_otp)
+        return responses.otp_sent()
 
 
 class ChangePassword(APIView):
