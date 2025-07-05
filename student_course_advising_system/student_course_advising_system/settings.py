@@ -40,7 +40,7 @@ if not EMAIL_ADDR or not EMAIL_PASSWORD:
     )
 
 
-ALLOWED_HOSTS = ["127.0.0.1", "localhost"]
+ALLOWED_HOSTS = ["*"]
 
 # Disable APPEND_SLASH to prevent POST redirect issues
 # APPEND_SLASH = False
@@ -147,19 +147,19 @@ STATIC_ROOT = BASE_DIR / "staticfiles"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 # CORS Configuration
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:8081",  # Expo development server
-    "http://127.0.0.1:8081",  # Expo development server alternative
-    "http://localhost:3000",  # React development server (if needed)
-    "http://127.0.0.1:3000",  # React development server alternative
-]
+CORS_ALLOW_ALL_ORIGINS = True
+# CORS_ALLOWED_ORIGINS = [
+#     "http://localhost:8081",  # Expo development server
+#     "http://127.0.0.1:8081",  # Expo development server alternative
+#     "http://localhost:3000",  # React development server (if needed)
+#     "http://127.0.0.1:3000",  # React development server alternative
+# ]
 
 # Allow credentials (cookies, authorization headers, etc.)
 CORS_ALLOW_CREDENTIALS = True
 
 # Allow all headers
 CORS_ALLOW_ALL_HEADERS = True
-
 # Allow all methods
 CORS_ALLOW_METHODS = [
     "DELETE",

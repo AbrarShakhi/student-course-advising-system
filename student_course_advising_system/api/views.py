@@ -174,11 +174,13 @@ class SendOTP(APIView):
 
         emailer = Emailer(student.email, self.reason_ids[reason_id])
 
-        try:
-            emailer.send(db_otp)
-        except Exception as e:
-            return responses.error_sending_otp(student_id)
+        # FIX: FIX THE EMAIl 
         print(db_otp)
+        # try:
+        #     emailer.send(db_otp)
+        # except Exception as e:
+        #     return responses.error_sending_otp(student_id)
+
         return responses.otp_sent()
 
 
