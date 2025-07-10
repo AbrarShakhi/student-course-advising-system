@@ -4,13 +4,15 @@ from app.admin import init_admin
 from flask_login import LoginManager
 from app.models.admin_user import AdminUser
 from app.admin.views import admin_auth
-import os
+from config import get_config
 
 def create_app():
     app = Flask(__name__)
-    app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', 'sqlite:///app.db')
-    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-    app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'dev')
+    
+    # Load configuration
+    config = get_config()
+    app.config.from_object(config)
+    config.init_app(app)
 
     db.init_app(app)
     init_admin(app, db)
