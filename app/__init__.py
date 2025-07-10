@@ -6,9 +6,10 @@ from app.models.admin_user import AdminUser
 from app.admin.views import admin_auth
 from config import get_config
 
+
 def create_app():
     app = Flask(__name__)
-    
+
     # Load configuration
     config = get_config()
     app.config.from_object(config)
@@ -20,7 +21,7 @@ def create_app():
     # Flask-Login setup
     login_manager = LoginManager()
     login_manager.init_app(app)
-    login_manager.login_view = 'admin_auth.admin_login'
+    login_manager.login_view = "admin_auth.admin_login"
 
     @login_manager.user_loader
     def load_user(user_id):

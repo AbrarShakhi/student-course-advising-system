@@ -1,218 +1,260 @@
-{% extends "admin/base.html" %}
-
-{% block title %}Dashboard{% endblock %}
-{% block page_title %}Dashboard{% endblock %}
-
-{% block content %}
+{% extends "admin/base.html" %} {% block title %}Dashboard{% endblock %} {%
+block page_title %}Dashboard{% endblock %} {% block content %}
 <div class="row">
-    <!-- Statistics Cards -->
-    <div class="col-xl-3 col-md-6 mb-4">
-        <div class="card border-left-primary shadow h-100 py-2">
-            <div class="card-body">
-                <div class="row no-gutters align-items-center">
-                    <div class="col mr-2">
-                        <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                            Total Students</div>
-                        <div class="h5 mb-0 font-weight-bold text-gray-800">{{ stats.total_students }}</div>
-                    </div>
-                    <div class="col-auto">
-                        <i class="fas fa-user-graduate fa-2x text-gray-300"></i>
-                    </div>
-                </div>
+  <!-- Statistics Cards -->
+  <div class="col-xl-3 col-md-6 mb-4">
+    <div class="card border-left-primary shadow h-100 py-2">
+      <div class="card-body">
+        <div class="row no-gutters align-items-center">
+          <div class="col mr-2">
+            <div
+              class="text-xs font-weight-bold text-primary text-uppercase mb-1"
+            >
+              Total Students
             </div>
+            <div class="h5 mb-0 font-weight-bold text-gray-800">
+              {{ stats.total_students }}
+            </div>
+          </div>
+          <div class="col-auto">
+            <i class="fas fa-user-graduate fa-2x text-gray-300"></i>
+          </div>
         </div>
+      </div>
     </div>
+  </div>
 
-    <div class="col-xl-3 col-md-6 mb-4">
-        <div class="card border-left-success shadow h-100 py-2">
-            <div class="card-body">
-                <div class="row no-gutters align-items-center">
-                    <div class="col mr-2">
-                        <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
-                            Total Courses</div>
-                        <div class="h5 mb-0 font-weight-bold text-gray-800">{{ stats.total_courses }}</div>
-                    </div>
-                    <div class="col-auto">
-                        <i class="fas fa-book fa-2x text-gray-300"></i>
-                    </div>
-                </div>
+  <div class="col-xl-3 col-md-6 mb-4">
+    <div class="card border-left-success shadow h-100 py-2">
+      <div class="card-body">
+        <div class="row no-gutters align-items-center">
+          <div class="col mr-2">
+            <div
+              class="text-xs font-weight-bold text-success text-uppercase mb-1"
+            >
+              Total Courses
             </div>
+            <div class="h5 mb-0 font-weight-bold text-gray-800">
+              {{ stats.total_courses }}
+            </div>
+          </div>
+          <div class="col-auto">
+            <i class="fas fa-book fa-2x text-gray-300"></i>
+          </div>
         </div>
+      </div>
     </div>
+  </div>
 
-    <div class="col-xl-3 col-md-6 mb-4">
-        <div class="card border-left-info shadow h-100 py-2">
-            <div class="card-body">
-                <div class="row no-gutters align-items-center">
-                    <div class="col mr-2">
-                        <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
-                            Total Sections</div>
-                        <div class="h5 mb-0 font-weight-bold text-gray-800">{{ stats.total_sections }}</div>
-                    </div>
-                    <div class="col-auto">
-                        <i class="fas fa-chalkboard-teacher fa-2x text-gray-300"></i>
-                    </div>
-                </div>
+  <div class="col-xl-3 col-md-6 mb-4">
+    <div class="card border-left-info shadow h-100 py-2">
+      <div class="card-body">
+        <div class="row no-gutters align-items-center">
+          <div class="col mr-2">
+            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+              Total Sections
             </div>
+            <div class="h5 mb-0 font-weight-bold text-gray-800">
+              {{ stats.total_sections }}
+            </div>
+          </div>
+          <div class="col-auto">
+            <i class="fas fa-chalkboard-teacher fa-2x text-gray-300"></i>
+          </div>
         </div>
+      </div>
     </div>
+  </div>
 
-    <div class="col-xl-3 col-md-6 mb-4">
-        <div class="card border-left-warning shadow h-100 py-2">
-            <div class="card-body">
-                <div class="row no-gutters align-items-center">
-                    <div class="col mr-2">
-                        <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
-                            Total Faculty</div>
-                        <div class="h5 mb-0 font-weight-bold text-gray-800">{{ stats.total_faculty }}</div>
-                    </div>
-                    <div class="col-auto">
-                        <i class="fas fa-user-tie fa-2x text-gray-300"></i>
-                    </div>
-                </div>
+  <div class="col-xl-3 col-md-6 mb-4">
+    <div class="card border-left-warning shadow h-100 py-2">
+      <div class="card-body">
+        <div class="row no-gutters align-items-center">
+          <div class="col mr-2">
+            <div
+              class="text-xs font-weight-bold text-warning text-uppercase mb-1"
+            >
+              Total Faculty
             </div>
+            <div class="h5 mb-0 font-weight-bold text-gray-800">
+              {{ stats.total_faculty }}
+            </div>
+          </div>
+          <div class="col-auto">
+            <i class="fas fa-user-tie fa-2x text-gray-300"></i>
+          </div>
         </div>
+      </div>
     </div>
+  </div>
 </div>
 
 <div class="row">
-    <!-- Quick Actions -->
-    <div class="col-lg-6 mb-4">
-        <div class="card shadow">
-            <div class="card-header py-3">
-                <h6 class="m-0 font-weight-bold text-primary">Quick Actions</h6>
-            </div>
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-md-6 mb-3">
-                        <a href="/admin/student/new/" class="btn btn-primary btn-block w-100">
-                            <i class="fas fa-user-plus me-2"></i>
-                            Add Student
-                        </a>
-                    </div>
-                    <div class="col-md-6 mb-3">
-                        <a href="/admin/course/new/" class="btn btn-success btn-block w-100">
-                            <i class="fas fa-plus me-2"></i>
-                            Add Course
-                        </a>
-                    </div>
-                    <div class="col-md-6 mb-3">
-                        <a href="/admin/section/new/" class="btn btn-info btn-block w-100">
-                            <i class="fas fa-chalkboard me-2"></i>
-                            Add Section
-                        </a>
-                    </div>
-                    <div class="col-md-6 mb-3">
-                        <a href="/admin/faculty/new/" class="btn btn-warning btn-block w-100">
-                            <i class="fas fa-user-plus me-2"></i>
-                            Add Faculty
-                        </a>
-                    </div>
-                </div>
-            </div>
+  <!-- Quick Actions -->
+  <div class="col-lg-6 mb-4">
+    <div class="card shadow">
+      <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">Quick Actions</h6>
+      </div>
+      <div class="card-body">
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <a
+              href="/admin/student/new/"
+              class="btn btn-primary btn-block w-100"
+            >
+              <i class="fas fa-user-plus me-2"></i>
+              Add Student
+            </a>
+          </div>
+          <div class="col-md-6 mb-3">
+            <a
+              href="/admin/course/new/"
+              class="btn btn-success btn-block w-100"
+            >
+              <i class="fas fa-plus me-2"></i>
+              Add Course
+            </a>
+          </div>
+          <div class="col-md-6 mb-3">
+            <a href="/admin/section/new/" class="btn btn-info btn-block w-100">
+              <i class="fas fa-chalkboard me-2"></i>
+              Add Section
+            </a>
+          </div>
+          <div class="col-md-6 mb-3">
+            <a
+              href="/admin/faculty/new/"
+              class="btn btn-warning btn-block w-100"
+            >
+              <i class="fas fa-user-plus me-2"></i>
+              Add Faculty
+            </a>
+          </div>
         </div>
+      </div>
     </div>
+  </div>
 
-    <!-- Recent Activity -->
-    <div class="col-lg-6 mb-4">
-        <div class="card shadow">
-            <div class="card-header py-3">
-                <h6 class="m-0 font-weight-bold text-primary">System Information</h6>
-            </div>
-            <div class="card-body">
-                <div class="mb-3">
-                    <strong>Current User:</strong> {{ current_user.username }}
-                </div>
-                <div class="mb-3">
-                    <strong>Email:</strong> {{ current_user.email }}
-                </div>
-                <div class="mb-3">
-                    <strong>Login Time:</strong> {{ current_user.created_at.strftime('%Y-%m-%d %H:%M:%S') if current_user.created_at else 'N/A' }}
-                </div>
-                <div class="mb-3">
-                    <strong>Status:</strong> 
-                    <span class="badge bg-success">Active</span>
-                </div>
-            </div>
+  <!-- Recent Activity -->
+  <div class="col-lg-6 mb-4">
+    <div class="card shadow">
+      <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">System Information</h6>
+      </div>
+      <div class="card-body">
+        <div class="mb-3">
+          <strong>Current User:</strong> {{ current_user.username }}
         </div>
+        <div class="mb-3"><strong>Email:</strong> {{ current_user.email }}</div>
+        <div class="mb-3">
+          <strong>Login Time:</strong> {{
+          current_user.created_at.strftime('%Y-%m-%d %H:%M:%S') if
+          current_user.created_at else 'N/A' }}
+        </div>
+        <div class="mb-3">
+          <strong>Status:</strong>
+          <span class="badge bg-success">Active</span>
+        </div>
+      </div>
     </div>
+  </div>
 </div>
 
 <div class="row">
-    <!-- Navigation Cards -->
-    <div class="col-12">
-        <div class="card shadow">
-            <div class="card-header py-3">
-                <h6 class="m-0 font-weight-bold text-primary">Manage System</h6>
+  <!-- Navigation Cards -->
+  <div class="col-12">
+    <div class="card shadow">
+      <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">Manage System</h6>
+      </div>
+      <div class="card-body">
+        <div class="row">
+          <div class="col-md-3 mb-3">
+            <div class="card text-center">
+              <div class="card-body">
+                <i class="fas fa-user-graduate fa-3x text-primary mb-3"></i>
+                <h5 class="card-title">Students</h5>
+                <p class="card-text">
+                  Manage student records, registrations, and academic progress.
+                </p>
+                <a href="/admin/student/" class="btn btn-primary"
+                  >Manage Students</a
+                >
+              </div>
             </div>
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-md-3 mb-3">
-                        <div class="card text-center">
-                            <div class="card-body">
-                                <i class="fas fa-user-graduate fa-3x text-primary mb-3"></i>
-                                <h5 class="card-title">Students</h5>
-                                <p class="card-text">Manage student records, registrations, and academic progress.</p>
-                                <a href="/admin/student/" class="btn btn-primary">Manage Students</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-3 mb-3">
-                        <div class="card text-center">
-                            <div class="card-body">
-                                <i class="fas fa-book fa-3x text-success mb-3"></i>
-                                <h5 class="card-title">Courses</h5>
-                                <p class="card-text">Manage course catalog, prerequisites, and course offerings.</p>
-                                <a href="/admin/course/" class="btn btn-success">Manage Courses</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-3 mb-3">
-                        <div class="card text-center">
-                            <div class="card-body">
-                                <i class="fas fa-chalkboard-teacher fa-3x text-info mb-3"></i>
-                                <h5 class="card-title">Sections</h5>
-                                <p class="card-text">Manage class sections, schedules, and room assignments.</p>
-                                <a href="/admin/section/" class="btn btn-info">Manage Sections</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-3 mb-3">
-                        <div class="card text-center">
-                            <div class="card-body">
-                                <i class="fas fa-user-tie fa-3x text-warning mb-3"></i>
-                                <h5 class="card-title">Faculty</h5>
-                                <p class="card-text">Manage faculty members, departments, and teaching assignments.</p>
-                                <a href="/admin/faculty/" class="btn btn-warning">Manage Faculty</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+          </div>
+          <div class="col-md-3 mb-3">
+            <div class="card text-center">
+              <div class="card-body">
+                <i class="fas fa-book fa-3x text-success mb-3"></i>
+                <h5 class="card-title">Courses</h5>
+                <p class="card-text">
+                  Manage course catalog, prerequisites, and course offerings.
+                </p>
+                <a href="/admin/course/" class="btn btn-success"
+                  >Manage Courses</a
+                >
+              </div>
             </div>
+          </div>
+          <div class="col-md-3 mb-3">
+            <div class="card text-center">
+              <div class="card-body">
+                <i class="fas fa-chalkboard-teacher fa-3x text-info mb-3"></i>
+                <h5 class="card-title">Sections</h5>
+                <p class="card-text">
+                  Manage class sections, schedules, and room assignments.
+                </p>
+                <a href="/admin/section/" class="btn btn-info"
+                  >Manage Sections</a
+                >
+              </div>
+            </div>
+          </div>
+          <div class="col-md-3 mb-3">
+            <div class="card text-center">
+              <div class="card-body">
+                <i class="fas fa-user-tie fa-3x text-warning mb-3"></i>
+                <h5 class="card-title">Faculty</h5>
+                <p class="card-text">
+                  Manage faculty members, departments, and teaching assignments.
+                </p>
+                <a href="/admin/faculty/" class="btn btn-warning"
+                  >Manage Faculty</a
+                >
+              </div>
+            </div>
+          </div>
         </div>
+      </div>
     </div>
+  </div>
 </div>
-{% endblock %}
-
-{% block scripts %}
+{% endblock %} {% block scripts %}
 <style>
-.border-left-primary {
+  .border-left-primary {
     border-left: 0.25rem solid #4e73df !important;
-}
-.border-left-success {
+  }
+
+  .border-left-success {
     border-left: 0.25rem solid #1cc88a !important;
-}
-.border-left-info {
+  }
+
+  .border-left-info {
     border-left: 0.25rem solid #36b9cc !important;
-}
-.border-left-warning {
+  }
+
+  .border-left-warning {
     border-left: 0.25rem solid #f6c23e !important;
-}
-.text-gray-800 {
+  }
+
+  .text-gray-800 {
     color: #5a5c69 !important;
-}
-.text-gray-300 {
+  }
+
+  .text-gray-300 {
     color: #dddfeb !important;
-}
+  }
 </style>
-{% endblock %} 
+{% endblock %}

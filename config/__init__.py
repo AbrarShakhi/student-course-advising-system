@@ -6,13 +6,14 @@ from config.testing import TestingConfig
 
 # Configuration mapping
 config = {
-    'development': DevelopmentConfig,
-    'production': ProductionConfig,
-    'testing': TestingConfig,
-    'default': DevelopmentConfig
+    "development": DevelopmentConfig,
+    "production": ProductionConfig,
+    "testing": TestingConfig,
+    "default": DevelopmentConfig,
 }
+
 
 def get_config():
     """Get configuration based on environment"""
-    env = os.environ.get('FLASK_ENV', 'development')
-    return config.get(env, config['default']) 
+    env = os.environ.get("FLASK_ENV", "development")
+    return config.get(env, config["default"])
