@@ -1,4 +1,4 @@
-from .db import db
+from ..core.db import db
 from .students import Student, StudentImage, StudentLogin, StudentOTP
 from .courses import Course
 from .base import CreditPart, Room, season, Timeslot, University, Year, Department

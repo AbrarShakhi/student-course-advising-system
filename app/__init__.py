@@ -1,5 +1,5 @@
 from flask import Flask
-from app.models import db
+from app.core.db import db
 from app.admin import init_admin
 from flask_login import LoginManager
 from app.models.admin_user import AdminUser

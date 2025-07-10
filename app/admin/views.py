@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash
 from flask_login import login_user, logout_user, login_required, current_user
 from app.models.admin_user import AdminUser
-from app.models.db import db
+from app.core.db import db
 from werkzeug.security import check_password_hash
 
 admin_auth = Blueprint("admin_auth", __name__, url_prefix="/admin")

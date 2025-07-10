@@ -14,7 +14,7 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from app import create_app
 from app.models.admin_user import AdminUser
-from app.models.db import db
+from app.core.db import db
 from config.settings import ADMIN_USERNAME, ADMIN_PASSWORD, ADMIN_EMAIL
 
 
