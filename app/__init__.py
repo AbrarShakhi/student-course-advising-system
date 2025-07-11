@@ -1,10 +1,13 @@
 from flask import Flask
-from app.core.db import db
-from app.admin import init_admin
 from flask_login import LoginManager
+
+from config import get_config
+from app.admin import init_admin
 from app.models.admin_user import AdminUser
 from app.admin.views import admin_auth
-from config import get_config
+from app.core.db import db
+from app.core.jwt import init_jwt  # <-- Import JWT init from core
+from app.api.auth.routes import auth_bp  # <-- Only import blueprint
 
 
 def create_app():
@@ -30,8 +33,10 @@ def create_app():
     # Register admin login/logout blueprint
     app.register_blueprint(admin_auth)
 
-    # Register blueprints here if you have any
-    # from app.api import api_bp
-    # app.register_blueprint(api_bp)
+    # Register API auth blueprint
+    app.register_blueprint(auth_bp, url_prefix='/auth')
+
+    # Initialize JWT
+    init_jwt(app)
 
     return app
