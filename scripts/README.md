@@ -5,14 +5,17 @@ This directory contains utility scripts for the Student Course Advising System.
 ## Available Scripts
 
 ### `create_admin_user.py`
+
 Creates the first admin user for the system.
 
 **Usage:**
+
 ```bash
 python scripts/create_admin_user.py
 ```
 
 **What it does:**
+
 - Creates database tables if they don't exist
 - Creates a default admin user with credentials from config
 - Default credentials (can be changed via environment variables):
@@ -21,14 +24,17 @@ python scripts/create_admin_user.py
   - Email: `admin@example.com`
 
 ### `test_admin.py`
+
 Tests the admin system to ensure everything is working correctly.
 
 **Usage:**
+
 ```bash
 python scripts/test_admin.py
 ```
 
 **What it does:**
+
 - Tests database table creation
 - Tests AdminUser model functionality
 - Creates and cleans up a test admin user
@@ -58,6 +64,7 @@ python scripts/create_admin_user.py
 ## Troubleshooting
 
 If you encounter import errors, make sure:
+
 1. You're running the script from the project root directory
 2. All dependencies are installed (`pip install -r requirements.txt`)
 3. The virtual environment is activated (if using one)
@@ -70,4 +77,4 @@ When adding new scripts to this directory:
 2. Use the configuration system from `config/`
 3. Add proper error handling
 4. Update this README with documentation
-5. Make scripts executable if needed: `chmod +x scripts/your_script.py` 
+5. Make scripts executable if needed: `chmod +x scripts/your_script.py`
