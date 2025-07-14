@@ -1,4 +1,5 @@
 import os
+
 from config.base import BaseConfig
 from config.development import DevelopmentConfig
 from config.production import ProductionConfig

@@ -1,6 +1,7 @@
-from app.core.db import db
 from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
+
+from app.core.db import db
 
 
 class AdminUser(UserMixin, db.Model):

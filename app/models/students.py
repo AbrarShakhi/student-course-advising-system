@@ -68,6 +68,8 @@ class StudentLogin(db.Model):
         db.String(13), db.ForeignKey("student.student_id"), primary_key=True
     )
     password = db.Column(db.String(128))
+    failed_attempts = db.Column(db.SmallInteger, default=0)
+    lockout_until = db.Column(db.DateTime, nullable=True)
 
     student = db.relationship("Student", back_populates="login")
 

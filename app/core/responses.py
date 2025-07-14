@@ -30,6 +30,10 @@ def invalid_password():
     return jsonify({"message": "Invalid student_id or password."}), 401
 
 
+def same_password():
+    return jsonify({"message": "choose a different password."}), 401
+
+
 def password_too_short():
     return (
         jsonify({"message": "Password must be greater than or equal to 8 characters."}),
@@ -89,3 +93,9 @@ def authentication_failed():
 
 def internal_server_error():
     return jsonify({"message": "Internal Server Error"}), 500
+
+
+def account_locked(lockout_until):
+    return jsonify({
+        "message": f"Account is locked. Try again after {lockout_until}."
+    }), 403

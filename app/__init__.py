@@ -1,5 +1,7 @@
 from flask import Flask
 from flask_login import LoginManager
+from flask_limiter import Limiter
+from flask_limiter.util import get_remote_address
 
 from config import get_config
 from app.admin import init_admin
@@ -20,6 +22,11 @@ def create_app():
 
     db.init_app(app)
     init_admin(app, db)
+
+    # Flask-Limiter setup
+    limiter = Limiter(
+        get_remote_address, app=app, default_limits=["400 per day", "70 per hour"]
+    )
 
     # Flask-Login setup
     login_manager = LoginManager()
