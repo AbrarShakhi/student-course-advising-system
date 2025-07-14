@@ -30,10 +30,6 @@ class ProductionConfig(BaseConfig):
     SESSION_COOKIE_SECURE = True
     REMEMBER_COOKIE_SECURE = True
 
-    # Email Configuration
-    MAIL_USE_TLS = True
-    MAIL_USE_SSL = False
-
     # File upload settings
     MAX_CONTENT_LENGTH = 32 * 1024 * 1024  # 32MB max file size
 

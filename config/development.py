@@ -28,9 +28,6 @@ class DevelopmentConfig(BaseConfig):
     # Debug toolbar (if installed)
     DEBUG_TB_INTERCEPT_REDIRECTS = False
 
-    # Development email settings
-    MAIL_DEBUG = True
-
     @staticmethod
     def init_app(app):
         """Initialize development-specific settings"""
