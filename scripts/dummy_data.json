@@ -1,0 +1,123 @@
+{
+  "credit_part": [
+    { "credit_id": 1, "min": 0, "max": 9 },
+    { "credit_id": 2, "min": 10, "max": 19 },
+    { "credit_id": 3, "min": 20, "max": 29 },
+    { "credit_id": 4, "min": 30, "max": 39 },
+    { "credit_id": 5, "min": 40, "max": 49 },
+    { "credit_id": 6, "min": 50, "max": 59 },
+    { "credit_id": 7, "min": 60, "max": 69 }
+  ],
+  "room": [
+    { "room_no": "101", "building": "Main" },
+    { "room_no": "102", "building": "Main" },
+    { "room_no": "103", "building": "Main" },
+    { "room_no": "104", "building": "Main" },
+    { "room_no": "105", "building": "Main" },
+    { "room_no": "106", "building": "Main" }
+  ],
+  "season": [
+    { "season_id": 1, "season_name": "Spring" },
+    { "season_id": 2, "season_name": "Summer" },
+    { "season_id": 3, "season_name": "Fall" }
+  ],
+  "timeslot": [
+    { "day": "Mon", "start_time": "09:00:00", "end_time": "10:00:00" },
+    { "day": "Tue", "start_time": "10:00:00", "end_time": "11:00:00" },
+    { "day": "Wed", "start_time": "11:00:00", "end_time": "12:00:00" },
+    { "day": "Thu", "start_time": "12:00:00", "end_time": "13:00:00" },
+    { "day": "Fri", "start_time": "13:00:00", "end_time": "14:00:00" }
+  ],
+  "year": [
+    { "year": 2021 },
+    { "year": 2022 },
+    { "year": 2023 },
+    { "year": 2024 },
+    { "year": 2025 }
+  ],
+  "department": [
+    { "dept_id": 1, "dept_short_name": "CSE", "long_name": "Computer Science" },
+    { "dept_id": 2, "dept_short_name": "EEE", "long_name": "Electronics" },
+    { "dept_id": 3, "dept_short_name": "MPS", "long_name": "Mechanical" }
+  ],
+  "university": [
+    {
+      "option": 1,
+      "is_advising": false,
+      "curr_season": 1,
+      "curr_year": 2024,
+      "credit_id": 1
+    }
+  ],
+  "course": [
+    {
+      "course_id": "CSE101",
+      "title": "Intro to CS",
+      "credit": 3.0,
+      "need_credit": 0,
+      "amount": 1000.0,
+      "prerequisite_id": "CSE101",
+      "extra_course_id": "CSE101",
+      "dept_id": 1
+    }
+  ],
+  "faculty": [
+    {
+      "faculty_short_id": "FAC1",
+      "first_name": "John",
+      "last_name": "Doe",
+      "fac_email": "john@example.com",
+      "room_no": "A101",
+      "dept_id": 1
+    }
+  ],
+  "student": [
+    {
+      "student_id": "2024000000001",
+      "first_name": "Alice",
+      "last_name": "Smith",
+      "mobile_no": "01234567890",
+      "email": "alice@example.com",
+      "is_dismissed": false,
+      "address": "123 Main St",
+      "gardian_name": "Bob Smith",
+      "gardian_phone": "0987654321",
+      "is_graduated": false,
+      "credit_completed": 0,
+      "dept_id": 1
+    }
+  ],
+  "section": [
+    {
+      "season_id": 1,
+      "year": 2024,
+      "section_no": 1,
+      "course_id": "CSE101",
+      "capacity": 30,
+      "room_no": "A101",
+      "day": "Mon",
+      "start_time": "09:00:00",
+      "end_time": "10:00:00"
+    }
+  ],
+  "takes": [
+    {
+      "season_id": 1,
+      "year": 2024,
+      "section_no": 1,
+      "course_id": "CSE101",
+      "student_id": "2024000000001",
+      "grade": 0.0,
+      "is_dropped": false
+    }
+  ],
+  "offers": [
+    {
+      "season_id": 1,
+      "year": 2024,
+      "section_no": 1,
+      "course_id": "CSE101",
+      "faculty_short_id": "FAC1"
+    }
+  ]
+}
