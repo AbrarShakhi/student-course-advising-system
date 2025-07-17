@@ -99,7 +99,7 @@ def activate_controller(student_id, raw_otp, raw_password):
         return invalid_otp()
 
     hashed_password = hash_password(raw_password)
-    student_login = StudentLogin(student_id=student_id, password=hashed_password)
+    student_login = StudentLogin(student_id=student_id, password=hashed_password) # type: ignore
     if save_db(student_login) is False:
         return error_creating_account(student_id)
 
