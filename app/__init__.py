@@ -2,6 +2,7 @@ from flask import Flask
 from flask_login import LoginManager
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
+from flask_cors import CORS
 
 from config import get_config
 from app.admin import init_admin
@@ -31,7 +32,7 @@ def create_app():
     # Flask-Login setup
     login_manager = LoginManager()
     login_manager.init_app(app)
-    login_manager.login_view = "admin_auth.admin_login"
+    login_manager.login_view = "admin_auth.admin_login" # type:ignore
 
     @login_manager.user_loader
     def load_user(user_id):
@@ -45,5 +46,8 @@ def create_app():
 
     # Initialize JWT
     init_jwt(app)
+
+    # Enable CORS
+    CORS(app, resources={r"/api/*": {"origins": "*"}})  # Allow all origins for /api/*
 
     return app

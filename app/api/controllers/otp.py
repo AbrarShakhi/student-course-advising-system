@@ -26,7 +26,7 @@ reason_ids = {1: "change_password", 2: "activate_account"}
 
 def send_otp_controller(student_id, reason_id):
     if valid_str_req_value([student_id, reason_id]) is False:
-        return missing_fields(student_id, reason_id)
+        return missing_fields([student_id, reason_id])
 
     try:
         reason_id = int(reason_id)
@@ -59,7 +59,7 @@ def send_otp_controller(student_id, reason_id):
 
         db_otp = OtpManager(student_otp).get_otp()
     except:
-        return error_generating_otp()
+        return error_generating_otp(student_id)
 
     emailer = Emailer(student.email, reason_ids[reason_id])
 

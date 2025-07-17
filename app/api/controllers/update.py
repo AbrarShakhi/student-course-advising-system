@@ -24,7 +24,7 @@ from app.core.db import save_db
 
 def forget_password_controller(student_id, raw_otp, raw_password):
     if valid_str_req_value([student_id, raw_otp, raw_password]) is False:
-        return missing_fields(student_id, raw_otp, raw_password)
+        return missing_fields([student_id, raw_otp, raw_password])
 
     if len(raw_password) < 8:
         return password_too_short()
@@ -40,7 +40,7 @@ def forget_password_controller(student_id, raw_otp, raw_password):
     if student_login is None:
         return account_not_activated()
 
-    if verify_otp(student_id) is False:
+    if verify_otp(student_id, raw_otp) is False:
         return invalid_otp()
 
     student_login.password = hash_password(raw_password)
@@ -58,7 +58,7 @@ def change_password_controller(student_id, old_password, new_password):
         return authentication_failed()
 
     if valid_str_req_value([new_password, old_password]) is False:
-        return missing_fields(new_password, old_password)
+        return missing_fields([new_password, old_password])
 
     if len(new_password) < 8:
         return password_too_short()

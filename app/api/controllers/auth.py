@@ -32,7 +32,7 @@ from app.core.serializers.student import serialize_student
 
 def login_controller(student_id, raw_password):
     if valid_str_req_value([student_id, raw_password]) is False:
-        return missing_fields(student_id, raw_password)
+        return missing_fields([student_id, raw_password])
 
     student, student_login = check_student_account(student_id)
     if student is None:
@@ -41,7 +41,7 @@ def login_controller(student_id, raw_password):
     if student_login is None:
         return account_not_activated()
 
-    if check_std_lockout() is False:
+    if check_std_lockout(student_login) is False:
         return account_locked(student_login.lockout_until)
 
     is_able, message = check_student_login_ability(student)
@@ -52,7 +52,6 @@ def login_controller(student_id, raw_password):
 
         return invalid_password()
 
-    # Successful login: reset failed_attempts and lockout_until
     if student_login:
         student_login.failed_attempts = 0
         student_login.lockout_until = None
@@ -80,7 +79,7 @@ def logout_controller(jti, jwt_blacklist):
 
 def activate_controller(student_id, raw_otp, raw_password):
     if valid_str_req_value([student_id, raw_otp, raw_password]) is False:
-        return missing_fields(student_id, raw_otp, raw_password)
+        return missing_fields([student_id, raw_otp, raw_password])
 
     if len(raw_password) < 8:
         return password_too_short()
@@ -96,7 +95,7 @@ def activate_controller(student_id, raw_otp, raw_password):
     if student_login is not None:
         return account_already_activated()
 
-    if verify_otp(student_id) is False:
+    if verify_otp(student_id, raw_otp) is False:
         return invalid_otp()
 
     hashed_password = hash_password(raw_password)
