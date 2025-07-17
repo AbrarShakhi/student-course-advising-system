@@ -73,11 +73,11 @@
   ],
   "student": [
     {
-      "student_id": "2024000000001",
+      "student_id": "2022-3-60-022",
       "first_name": "Alice",
       "last_name": "Smith",
       "mobile_no": "01234567890",
-      "email": "alice@example.com",
+      "email": "tamtop2000@gmail.com",
       "is_dismissed": false,
       "address": "123 Main St",
       "gardian_name": "Bob Smith",
