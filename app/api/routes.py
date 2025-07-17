@@ -21,7 +21,6 @@ from app.api.controllers.auth import (
 )
 from app.api.controllers.otp import send_otp_controller
 from app.api.controllers.basics import (
-    credit_partition_controller,
     list_semesters_controller,
     university_info_controller,
 )
@@ -184,10 +183,3 @@ def university_info():
     except:
         return internal_server_error()
 
-
-@api_bp.route("/credit-partition", methods=["GET"])
-def credit_partition():
-    try:
-        return credit_partition_controller()
-    except:
-        return internal_server_error()

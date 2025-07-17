@@ -1,8 +1,12 @@
 from datetime import datetime, timedelta, timezone
 
+from flask import current_app
 
+from app.core.serializers.base import serialize_credit_partition
+from app.models.base import University
 from app.models.students import Student, StudentLogin
 from app.core.db import save_db
+from app.core.utils.helpers import get_uni_info
 
 
 def check_student_login_ability(student: Student) -> tuple[bool, dict]:
@@ -10,6 +14,14 @@ def check_student_login_ability(student: Student) -> tuple[bool, dict]:
         return False, {"message": "You are dismissed from the university."}
     if student.is_graduated:
         return False, {"message": "You have graduated from the university."}
+    uni_info = get_uni_info()
+
+    if uni_info.is_advising is True:
+        if uni_info.min_cred is None or uni_info.max_cred is None:
+            current_app.logger.error(f"[AUDIT] In database table:'university' error.")
+            raise Exception
+        if not (uni_info.min_cred <= student.credit_completed <= uni_info.max_cred):
+            return False, {"message": "It is not your advising time"}
     return True, {}
 
 
