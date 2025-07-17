@@ -20,7 +20,10 @@ from app.api.controllers.auth import (
     welcome_controller,
 )
 from app.api.controllers.otp import send_otp_controller
-from app.api.controllers.basics import list_semesters_controller
+from app.api.controllers.basics import (
+    list_semesters_controller,
+    university_info_controller,
+)
 
 
 api_bp = Blueprint("api", __name__)
@@ -166,9 +169,20 @@ def change_password():
 
 
 @api_bp.route("/list-semesters", methods=["GET"])
-@limiter.limit("5 per minute")
 def list_semesters():
     try:
         return list_semesters_controller()
     except:
         return internal_server_error()
+
+
+@api_bp.route("/university_info", methods=["GET"])
+def university_info():
+    try:
+        return university_info_controller()
+    except Exception as e:
+        print(e)
+        return internal_server_error()
+
+
+
