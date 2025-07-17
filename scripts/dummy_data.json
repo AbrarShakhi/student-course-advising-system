@@ -1,12 +1,12 @@
 {
   "credit_part": [
-    { "credit_id": 1, "min": 0, "max": 9 },
-    { "credit_id": 2, "min": 10, "max": 19 },
-    { "credit_id": 3, "min": 20, "max": 29 },
-    { "credit_id": 4, "min": 30, "max": 39 },
-    { "credit_id": 5, "min": 40, "max": 49 },
-    { "credit_id": 6, "min": 50, "max": 59 },
-    { "credit_id": 7, "min": 60, "max": 69 }
+    { "credit_id": 1, "min_cred": 0, "max_cred": 9 },
+    { "credit_id": 2, "min_cred": 10, "max_cred": 19 },
+    { "credit_id": 3, "min_cred": 20, "max_cred": 29 },
+    { "credit_id": 4, "min_cred": 30, "max_cred": 39 },
+    { "credit_id": 5, "min_cred": 40, "max_cred": 49 },
+    { "credit_id": 6, "min_cred": 50, "max_cred": 59 },
+    { "credit_id": 7, "min_cred": 60, "max_cred": 69 }
   ],
   "room": [
     { "room_no": "101", "building": "Main" },

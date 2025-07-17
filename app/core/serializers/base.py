@@ -6,6 +6,14 @@ def serialize_semester(year, season):
     }
 
 
+def serialize_credit_partition(credit_part):
+    return {
+        "credit_id": credit_part.credit_id,
+        "min_cred": credit_part.min_cred,
+        "max_cred": credit_part.max_cred,
+    }
+
+
 def serialize_university(university):
     return {
         "option": university.option,

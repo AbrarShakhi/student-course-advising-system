@@ -7,8 +7,8 @@ from app.core.db import db
 class CreditPart(db.Model):
     __tablename__ = "credit_part"
     credit_id = db.Column(db.SmallInteger, primary_key=True)
-    min = db.Column(db.SmallInteger, unique=True, nullable=False)
-    max = db.Column(db.SmallInteger, unique=True, nullable=False)
+    min_cred = db.Column(db.SmallInteger, unique=True, nullable=False)
+    max_cred = db.Column(db.SmallInteger, unique=True, nullable=False)
 
 
 # -----------------------------
