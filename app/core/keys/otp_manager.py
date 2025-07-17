@@ -1,6 +1,6 @@
 import random
 import string
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 
 from app.models.students import StudentOTP
 from app.core.db import save_db
@@ -26,7 +26,7 @@ class OtpManager:
         self.__refresh_otp()
 
     def __reset_otp(self):
-        now = datetime.utcnow()
+        now = datetime.now(timezone.utc)
         self.__std_otp.otp = generate_otp()
         self.__std_otp.created_at = now
         self.__std_otp.expires_at = now + timedelta(minutes=10)
@@ -73,6 +73,6 @@ class OtpManager:
     def is_expired(self):
         return (
             self.__std_otp.expires_at is None
-            or datetime.utcnow() > self.__std_otp.expires_at
+            or datetime.now(timezone.utc) > self.__std_otp.expires_at
             or (self.__std_otp.try_count or 0) >= self.MAX_TRIES
         )

@@ -26,9 +26,6 @@ def forget_password_controller(student_id, raw_otp, raw_password):
     if valid_str_req_value([student_id, raw_otp, raw_password]) is False:
         return missing_fields([student_id, raw_otp, raw_password])
 
-    if len(raw_password) < 8:
-        return password_too_short()
-
     student, student_login = check_student_account(student_id)
     if student is None:
         return student_not_exist()
@@ -39,6 +36,9 @@ def forget_password_controller(student_id, raw_otp, raw_password):
 
     if student_login is None:
         return account_not_activated()
+
+    if len(raw_password) < 8:
+        return password_too_short()
 
     if verify_otp(student_id, raw_otp) is False:
         return invalid_otp()

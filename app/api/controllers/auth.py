@@ -21,6 +21,7 @@ from app.core.keys.passwords import compare_password, hash_password
 from app.core.utils.std_manager import (
     check_std_lockout,
     check_student_account,
+    increment_std_false_attempts,
     valid_str_req_value,
     check_student_login_ability,
 )
@@ -49,12 +50,8 @@ def login_controller(student_id, raw_password):
         return not_eligible(message)
 
     if compare_password(raw_password, student_login.password) is False:
+        increment_std_false_attempts(student_login)
         return invalid_password()
-
-    if student_login:
-        student_login.failed_attempts = 0
-        student_login.lockout_until = None
-        save_db(student_login)
 
     access_token = create_access_token(identity=student_id)
     current_app.logger.info(
@@ -131,7 +128,4 @@ def welcome_controller(student_id):
     if student_login is None:
         return account_not_activated()
 
-    current_app.logger.info(
-        f"[AUDIT] Profile viewed for student_id={student_id} from {request.remote_addr}"
-    )
     return jsonify(serialize_student(student)), 200

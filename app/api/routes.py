@@ -20,6 +20,7 @@ from app.api.controllers.auth import (
     welcome_controller,
 )
 from app.api.controllers.otp import send_otp_controller
+from app.api.controllers.basics import list_semesters_controller
 
 
 api_bp = Blueprint("api", __name__)
@@ -160,5 +161,14 @@ def change_password():
         old_password = data.get("old_password")
         new_password = data.get("new_password")
         return change_password_controller(student_id, old_password, new_password)
+    except:
+        return internal_server_error()
+
+
+@api_bp.route("/list-semesters", methods=["GET"])
+@limiter.limit("5 per minute")
+def list_semesters():
+    try:
+        return list_semesters_controller()
     except:
         return internal_server_error()

@@ -1,5 +1,6 @@
 from datetime import datetime, timedelta, timezone
 
+
 from app.models.students import Student, StudentLogin
 from app.core.db import save_db
 
@@ -40,7 +41,10 @@ def valid_str_req_value(values=None):
 def check_std_lockout(student_login):
     if student_login.lockout_until:
         now = datetime.now(timezone.utc)
-        if student_login.lockout_until > now:
+        lockout_until = student_login.lockout_until
+        if lockout_until.tzinfo is None:
+            lockout_until = lockout_until.replace(tzinfo=timezone.utc)
+        if lockout_until > now:
             return False
     return True
 
