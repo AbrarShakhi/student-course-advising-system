@@ -69,7 +69,7 @@ class StudentLogin(db.Model):
     )
     password = db.Column(db.String(128))
     failed_attempts = db.Column(db.SmallInteger, default=0)
-    lockout_until = db.Column(db.DateTime, nullable=True)
+    lockout_until = db.Column(db.DateTime(timezone=True), nullable=True)
 
     student = db.relationship("Student", back_populates="login")
 
@@ -83,8 +83,8 @@ class StudentOTP(db.Model):
         db.String(13), db.ForeignKey("student.student_id"), primary_key=True
     )
     otp = db.Column(db.String(6))
-    created_at = db.Column(db.DateTime)
-    expires_at = db.Column(db.DateTime)
+    created_at = db.Column(db.DateTime(timezone=True))
+    expires_at = db.Column(db.DateTime(timezone=True))
     try_count = db.Column(db.SmallInteger, default=0)
 
     student = db.relationship("Student", back_populates="otp")

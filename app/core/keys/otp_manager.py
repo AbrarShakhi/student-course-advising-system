@@ -71,8 +71,12 @@ class OtpManager:
         save_db(self.__std_otp)
 
     def is_expired(self):
+        expires_at = self.__std_otp.expires_at
+        if expires_at is not None and expires_at.tzinfo is None:
+            # Assume naive datetimes are in UTC
+            expires_at = expires_at.replace(tzinfo=timezone.utc)
         return (
-            self.__std_otp.expires_at is None
-            or datetime.now(timezone.utc) > self.__std_otp.expires_at
+            expires_at is None
+            or datetime.now(timezone.utc) > expires_at
             or (self.__std_otp.try_count or 0) >= self.MAX_TRIES
         )
