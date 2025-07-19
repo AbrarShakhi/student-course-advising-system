@@ -1,5 +1,5 @@
 from flask_jwt_extended import create_access_token, get_jwt_identity
-from flask import jsonify, current_app, request, make_response
+from flask import Response, current_app, request, jsonify
 
 from app.core.responses import (
     authentication_failed,
@@ -25,7 +25,7 @@ from app.core.utils.std_manager import (
     valid_str_req_value,
     check_student_login_ability,
 )
-from app.models.students import StudentLogin
+from app.models.students import StudentLogin, Student
 from app.core.keys.otp_manager import verify_otp
 from app.core.db import save_db
 from app.core.serializers.student import serialize_student
@@ -68,7 +68,7 @@ def login_controller(student_id, raw_password):
     return response
 
 
-def logout_controller(jti, jwt_blacklist):
+def logout_controller(jti, jwt_blacklist, res = None):
     jwt_blacklist.add(jti)
     student_id = None
     try:
@@ -78,7 +78,9 @@ def logout_controller(jti, jwt_blacklist):
     current_app.logger.info(
         f"[AUDIT] Logout for student_id={student_id} from {request.remote_addr}"
     )
-    return logout_success()
+    if not res:
+        res = jsonify({"message": "Logout successful."}), 200
+    return logout_success(res)
 
 
 def activate_controller(student_id, raw_otp, raw_password):
@@ -113,19 +115,32 @@ def activate_controller(student_id, raw_otp, raw_password):
     return account_activated()
 
 
-def welcome_controller(student_id):
+
+
+def welcome_controller(student):
+    return jsonify(serialize_student(student)), 200
+
+
+def relog_controller(
+    student_id,
+) -> tuple[bool, tuple[Response, int] | None, Student | None]:
+
     if valid_str_req_value([student_id]) is False:
-        return authentication_failed()
+        return False, authentication_failed(), None
 
     student, student_login = check_student_account(student_id)
     if student is None:
-        return student_not_exist()
+        return False, student_not_exist(), student
 
     is_able, message = check_student_login_ability(student)
     if not is_able:
-        return not_eligible(message)
+        return False, not_eligible(message), student
 
     if student_login is None:
-        return account_not_activated()
+        return False, account_not_activated(), student
 
-    return jsonify(serialize_student(student)), 200
+    return (
+        True,
+        None,
+        student
+    )

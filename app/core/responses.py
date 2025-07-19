@@ -68,8 +68,8 @@ def login_success():
     return response
 
 
-def logout_success():
-    response = make_response(jsonify({"message": "Logout successful."}), 200)
+def logout_success(res):
+    response = make_response(res)
     response.delete_cookie("access_token_cookie")
     return response
 

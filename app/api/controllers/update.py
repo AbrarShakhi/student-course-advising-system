@@ -20,6 +20,7 @@ from app.core.utils.std_manager import (
 )
 from app.core.keys.otp_manager import verify_otp
 from app.core.db import save_db
+from app.models.students import StudentLogin
 
 
 def forget_password_controller(student_id, raw_otp, raw_password):
@@ -53,28 +54,19 @@ def forget_password_controller(student_id, raw_otp, raw_password):
     return password_updated_successfully()
 
 
-def change_password_controller(student_id, old_password, new_password):
-    if valid_str_req_value([student_id]) is False:
-        return authentication_failed()
-
+def change_password_controller(student, old_password, new_password):
     if valid_str_req_value([new_password, old_password]) is False:
         return missing_fields([new_password, old_password])
 
     if len(new_password) < 8:
         return password_too_short()
+    
+    student_id = student.student_id
 
-    student, student_login = check_student_account(student_id)
-    if student is None:
-        return student_not_exist()
-
-    is_able, message = check_student_login_ability(student)
-    if not is_able:
-        return not_eligible(message)
-
+    student_login = StudentLogin.query.filter_by(student_id=student_id).first()
     if student_login is None:
         return account_not_activated()
 
-    # Check that the old password matches before allowing change
     if not compare_password(old_password, student_login.password):
         return same_password()
 
@@ -86,3 +78,4 @@ def change_password_controller(student_id, old_password, new_password):
         f"[AUDIT] Password changed for student_id={student_id} from {request.remote_addr}"
     )
     return password_updated_successfully()
+

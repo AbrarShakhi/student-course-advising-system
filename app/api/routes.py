@@ -18,11 +18,13 @@ from app.api.controllers.auth import (
     logout_controller,
     activate_controller,
     welcome_controller,
+    relog_controller
 )
 from app.api.controllers.otp import send_otp_controller
 from app.api.controllers.basics import (
     list_semesters_controller,
     university_info_controller,
+    class_schedule_controller
 )
 
 
@@ -141,7 +143,11 @@ def welcome():
     """
     try:
         student_id = get_jwt_identity()
-        return welcome_controller(student_id)
+        is_able, res, student =  relog_controller(student_id)
+        if is_able is False:
+            jti = get_jwt()["jti"]
+            return logout_controller(jti, jwt_blacklist, res)
+        return welcome_controller(student)
     except:
         return internal_server_error()
 
@@ -163,7 +169,11 @@ def change_password():
         data = request.get_json()
         old_password = data.get("old_password")
         new_password = data.get("new_password")
-        return change_password_controller(student_id, old_password, new_password)
+        is_able, res, student =  relog_controller(student_id)
+        if is_able is False:
+            jti = get_jwt()["jti"]
+            return logout_controller(jti, jwt_blacklist, res)
+        return change_password_controller(student, old_password, new_password)
     except:
         return internal_server_error()
 
@@ -176,10 +186,26 @@ def list_semesters():
         return internal_server_error()
 
 
-@api_bp.route("/university_info", methods=["GET"])
+@api_bp.route("/university-info", methods=["GET"])
 def university_info():
     try:
         return university_info_controller()
     except:
         return internal_server_error()
+
+@api_bp.route("/class-schedule", methods=["GET"])
+@jwt_required()
+def class_schedule():
+    try:
+        student_id = get_jwt_identity()
+        season_id = request.args.get("season_id")
+        year = request.args.get("year")
+        is_able, res, student =  relog_controller(student_id)
+        if is_able is False:
+            jti = get_jwt()["jti"]
+            return logout_controller(jti, jwt_blacklist, res)
+        return class_schedule_controller(student)
+    except:
+        return internal_server_error()
+
 

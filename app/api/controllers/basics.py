@@ -17,3 +17,6 @@ def university_info_controller():
     uni_info = get_uni_info()
     return serialize_university(uni_info), 200
 
+
+def class_schedule_controller(student):
+    return {}, 500

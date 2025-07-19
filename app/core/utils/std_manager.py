@@ -61,7 +61,7 @@ def check_std_lockout(student_login):
     return True
 
 
-def increment_std_false_attempts(student_login, look_after=5, look_duration=15):
+def increment_std_false_attempts(student_login, look_after=5, look_duration=5):
     student_login.failed_attempts = (student_login.failed_attempts or 0) + 1
     if student_login.failed_attempts >= look_after:
         student_login.lockout_until = datetime.now(timezone.utc) + timedelta(
