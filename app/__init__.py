@@ -7,7 +7,6 @@ from flask_cors import CORS
 from config import get_config
 from app.admin import init_admin
 from app.models.admin_user import AdminUser
-from app.admin.views import admin_auth
 from app.core.db import db
 from app.core.jwt import init_jwt
 from app.api.routes import api_bp
@@ -32,14 +31,11 @@ def create_app():
     # Flask-Login setup
     login_manager = LoginManager()
     login_manager.init_app(app)
-    login_manager.login_view = "admin_auth.admin_login" # type:ignore
+    login_manager.login_view = "admin_auth.admin_login"  # type:ignore
 
     @login_manager.user_loader
     def load_user(user_id):
         return AdminUser.query.get(int(user_id))
-
-    # Register admin login/logout blueprint
-    app.register_blueprint(admin_auth)
 
     # Register API auth blueprint
     app.register_blueprint(api_bp, url_prefix="/api")

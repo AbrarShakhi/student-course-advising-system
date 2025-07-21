@@ -21,4 +21,6 @@ def serialize_university(university):
         "curr_season": university.curr_season,
         "curr_year": university.curr_year,
         "credit_id": university.credit_id,
+        "min_cred_need": university.min_cred_need,
+        "max_cred_need": university.max_cred_need,
     }

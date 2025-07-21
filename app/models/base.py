@@ -53,6 +53,8 @@ class University(db.Model):
     credit_id = db.Column(
         db.SmallInteger, db.ForeignKey("credit_part.credit_id"), nullable=False
     )
+    min_cred_need = db.Column(db.SmallInteger, nullable=False, default=9)
+    max_cred_need = db.Column(db.SmallInteger, nullable=False, default=15)
 
     season = db.relationship("season", backref="universities")
     year_rel = db.relationship("Year", backref="universities")
