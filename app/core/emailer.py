@@ -6,17 +6,17 @@ REASON_SUBJECTS = {
     "activate_account": "Account Activation Code",
 }
 
+
 class Emailer:
-    def __init__(self, sender: str, reason: str):
+    def __init__(self, sender: str, reason: str) -> None:
         self.sender = sender
         self.reason = reason
         self.subject = REASON_SUBJECTS.get(self.reason)
         self.yag = yagmail.SMTP(
-            current_app.config["EMAIL_ADDRESS"],
-            current_app.config["EMAIL_PASSWORD"]
+            current_app.config["EMAIL_ADDRESS"], current_app.config["EMAIL_PASSWORD"]
         )
 
-    def send(self, code: str):
+    def send(self, code: str) -> None:
         body = f"""
         <html>
         <head>

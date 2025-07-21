@@ -1,4 +1,5 @@
 import os
+from typing import Any
 
 from config.base import BaseConfig
 from config.development import DevelopmentConfig
@@ -6,7 +7,7 @@ from config.production import ProductionConfig
 from config.testing import TestingConfig
 
 # Configuration mapping
-config = {
+config: dict[str, Any] = {
     "development": DevelopmentConfig,
     "production": ProductionConfig,
     "testing": TestingConfig,
@@ -14,7 +15,7 @@ config = {
 }
 
 
-def get_config():
+def get_config() -> Any:
     """Get configuration based on environment"""
     env = os.environ.get("FLASK_ENV", "development")
     return config.get(env, config["default"])

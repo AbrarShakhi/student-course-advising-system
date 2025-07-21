@@ -23,7 +23,7 @@ class Room(db.Model):
 # -----------------------------
 # season Model
 # -----------------------------
-class season(db.Model):
+class Season(db.Model):
     __tablename__ = "season"
     season_id = db.Column(db.SmallInteger, primary_key=True)
     season_name = db.Column(db.String(10))

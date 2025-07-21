@@ -2,11 +2,8 @@ from datetime import datetime, timedelta, timezone
 
 from flask import current_app
 
-from app.core.serializers.base import serialize_credit_partition
-from app.models.base import University
-from app.models.students import Student, StudentLogin
+from app.models import Student, StudentLogin, University
 from app.core.db import save_db
-from app.core.utils.helpers import get_uni_info
 
 
 def check_student_login_ability(student: Student) -> tuple[bool, dict]:
@@ -14,14 +11,19 @@ def check_student_login_ability(student: Student) -> tuple[bool, dict]:
         return False, {"message": "You are dismissed from the university."}
     if student.is_graduated:
         return False, {"message": "You have graduated from the university."}
-    uni_info = get_uni_info()
 
-    if uni_info.is_advising is True:
-        if uni_info.min_cred is None or uni_info.max_cred is None:
-            current_app.logger.error(f"[AUDIT] In database table:'university' error.")
-            raise Exception
-        if not (uni_info.min_cred <= student.credit_completed <= uni_info.max_cred):
-            return False, {"message": "It is not your advising time"}
+    uni_info: University | None = University.query.filter_by(option=1).first()
+    if uni_info:
+        if uni_info.is_advising is True:
+            min_cred = uni_info.credit_part.min_cred
+            max_cred = uni_info.credit_part.max_cred
+            if min_cred is None or max_cred is None:
+                current_app.logger.error(
+                    f"[AUDIT] In database table:'university | Credit_part' error."
+                )
+                raise Exception
+            if not (min_cred <= student.credit_completed <= max_cred):
+                return False, {"message": "It is not your advising time"}
     return True, {}
 
 
@@ -35,7 +37,7 @@ def check_student_account(
     return student, student_login
 
 
-def valid_str_req_value(values=None):
+def valid_str_req_value(values=None) -> bool:
     if type(values) != list:
         raise TypeError
 
@@ -50,7 +52,7 @@ def valid_str_req_value(values=None):
     return True
 
 
-def check_std_lockout(student_login):
+def check_std_lockout(student_login: StudentLogin) -> bool:
     if student_login.lockout_until:
         now = datetime.now(timezone.utc)
         lockout_until = student_login.lockout_until
@@ -61,7 +63,9 @@ def check_std_lockout(student_login):
     return True
 
 
-def increment_std_false_attempts(student_login, look_after=5, look_duration=5):
+def increment_std_false_attempts(
+    student_login: StudentLogin, look_after=5, look_duration=5
+) -> None:
     student_login.failed_attempts = (student_login.failed_attempts or 0) + 1
     if student_login.failed_attempts >= look_after:
         student_login.lockout_until = datetime.now(timezone.utc) + timedelta(

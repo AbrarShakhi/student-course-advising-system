@@ -6,12 +6,14 @@ from app.models.students import StudentOTP
 from app.core.db import save_db
 
 
-def generate_otp(length: int = 6):
+def generate_otp(length: int = 6) -> str:
     return "".join(random.choices(string.digits, k=length))
 
 
-def verify_otp(student_id: str, raw_otp: str):
-    student_otp = StudentOTP.query.filter_by(student_id=student_id).first()
+def verify_otp(student_id: str, raw_otp: str) -> bool:
+    student_otp: StudentOTP | None = StudentOTP.query.filter_by(
+        student_id=student_id
+    ).first()
     if student_otp is None:
         return False
 
@@ -21,11 +23,11 @@ def verify_otp(student_id: str, raw_otp: str):
 class OtpManager:
     MAX_TRIES = 5
 
-    def __init__(self, std_otp: StudentOTP):
+    def __init__(self, std_otp: StudentOTP) -> None:
         self.__std_otp: StudentOTP = std_otp
         self.__refresh_otp()
 
-    def __reset_otp(self):
+    def __reset_otp(self) -> None:
         now = datetime.now(timezone.utc)
         self.__std_otp.otp = generate_otp()
         self.__std_otp.created_at = now
@@ -33,7 +35,7 @@ class OtpManager:
         self.__std_otp.try_count = 0
         save_db(self.__std_otp)
 
-    def __refresh_otp(self):
+    def __refresh_otp(self) -> None:
         if (
             self.__std_otp.otp is None
             or self.__std_otp.created_at is None
@@ -44,11 +46,11 @@ class OtpManager:
         if self.is_expired():
             self.__reset_otp()
 
-    def get_otp(self):
+    def get_otp(self) -> str:
         self.__refresh_otp()
         return self.__std_otp.otp
 
-    def compare_otp(self, raw_otp):
+    def compare_otp(self, raw_otp) -> bool:
         if (
             self.__std_otp.otp is None
             or self.__std_otp.created_at is None
@@ -66,11 +68,11 @@ class OtpManager:
             self.__increment_try_count()
             return False
 
-    def __increment_try_count(self):
+    def __increment_try_count(self) -> None:
         self.__std_otp.try_count = (self.__std_otp.try_count or 0) + 1
         save_db(self.__std_otp)
 
-    def is_expired(self):
+    def is_expired(self) -> bool:
         expires_at = self.__std_otp.expires_at
         if expires_at is not None and expires_at.tzinfo is None:
             # Assume naive datetimes are in UTC

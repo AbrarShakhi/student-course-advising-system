@@ -1,4 +1,9 @@
-def serialize_semester(year, season):
+from typing import Any
+
+from app.models import University, Year, Season, CreditPart
+
+
+def serialize_semester(year: Year, season: Season) -> dict[str, Any]:
     return {
         "year": year.year,
         "season_id": season.season_id,
@@ -6,7 +11,7 @@ def serialize_semester(year, season):
     }
 
 
-def serialize_credit_partition(credit_part):
+def serialize_credit_partition(credit_part: CreditPart) -> dict[str, Any]:
     return {
         "credit_id": credit_part.credit_id,
         "min_cred": credit_part.min_cred,
@@ -14,7 +19,7 @@ def serialize_credit_partition(credit_part):
     }
 
 
-def serialize_university(university):
+def serialize_university(university: University) -> dict[str, Any]:
     return {
         "option": university.option,
         "is_advising": university.is_advising,

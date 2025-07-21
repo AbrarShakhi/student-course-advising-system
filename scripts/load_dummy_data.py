@@ -16,7 +16,15 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from app import create_app
 from app.core.db import db
-from app.models.base import CreditPart, Room, season, Timeslot, Year, Department, University
+from app.models.base import (
+    CreditPart,
+    Room,
+    Season,
+    Timeslot,
+    Year,
+    Department,
+    University,
+)
 from app.models.admin_user import AdminUser
 from app.models.courses import Course
 from app.models.faculties import Faculty
@@ -27,7 +35,7 @@ from app.models.students import Student, StudentImage, StudentLogin, StudentOTP
 INSERT_ORDER = [
     ("credit_part", CreditPart),
     ("room", Room),
-    ("season", season),
+    ("season", Season),
     ("timeslot", Timeslot),
     ("year", Year),
     ("department", Department),
@@ -44,6 +52,7 @@ INSERT_ORDER = [
     ("offers", Offers),
 ]
 
+
 def parse_time(val):
     if val is None:
         return None
@@ -54,6 +63,7 @@ def parse_time(val):
     except Exception:
         return val
 
+
 def parse_datetime(val):
     if val is None:
         return None
@@ -61,6 +71,7 @@ def parse_datetime(val):
         return datetime.fromisoformat(val)
     except Exception:
         return val
+
 
 def main():
     app = create_app()
@@ -90,5 +101,6 @@ def main():
             db.session.rollback()
             print(f"Error committing data: {e}")
 
+
 if __name__ == "__main__":
-    main() 
+    main()

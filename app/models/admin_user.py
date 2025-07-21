@@ -10,14 +10,14 @@ class AdminUser(UserMixin, db.Model):
     username = db.Column(db.String(64), unique=True, nullable=False)
     password_hash = db.Column(db.String(128), nullable=False)
     email = db.Column(db.String(128), unique=True, nullable=False)
-    is_active = db.Column(db.Boolean, default=True)
+    is_active_user = db.Column(db.Boolean, default=True)
     created_at = db.Column(db.DateTime, default=db.func.current_timestamp())
 
-    def set_password(self, password):
+    def set_password(self, password) -> None:
         self.password_hash = generate_password_hash(password)
 
-    def check_password(self, password):
+    def check_password(self, password) -> bool:
         return check_password_hash(self.password_hash, password)
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return f"<AdminUser {self.username}>"

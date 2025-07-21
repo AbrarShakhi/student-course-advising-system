@@ -1,4 +1,9 @@
-def serialize_student(student):
+from typing import Any
+
+from app.models import Student
+
+
+def serialize_student(student: Student) -> dict[str, Any]:
     return {
         "student_id": student.student_id,
         "first_name": student.first_name,
@@ -12,5 +17,4 @@ def serialize_student(student):
         "is_graduated": student.is_graduated,
         "credit_completed": float(student.credit_completed),
         "dept_id": student.dept_id,
-        # Add more fields as needed
     }

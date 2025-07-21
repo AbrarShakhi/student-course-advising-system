@@ -31,7 +31,9 @@ from app.core.db import save_db
 from app.core.serializers.student import serialize_student
 
 
-def login_controller(student_id, raw_password):
+def login_controller(
+    student_id: str, raw_password: str
+) -> tuple[Response, int] | Response:
     if valid_str_req_value([student_id, raw_password]) is False:
         return missing_fields([student_id, raw_password])
 
@@ -68,7 +70,7 @@ def login_controller(student_id, raw_password):
     return response
 
 
-def logout_controller(jti, jwt_blacklist, res = None):
+def logout_controller(jti, jwt_blacklist, res=None) -> tuple[Response, int] | Response:
     jwt_blacklist.add(jti)
     student_id = None
     try:
@@ -83,7 +85,9 @@ def logout_controller(jti, jwt_blacklist, res = None):
     return logout_success(res)
 
 
-def activate_controller(student_id, raw_otp, raw_password):
+def activate_controller(
+    student_id, raw_otp, raw_password
+) -> tuple[Response, int] | Response:
     if valid_str_req_value([student_id, raw_otp, raw_password]) is False:
         return missing_fields([student_id, raw_otp, raw_password])
 
@@ -115,9 +119,7 @@ def activate_controller(student_id, raw_otp, raw_password):
     return account_activated()
 
 
-
-
-def welcome_controller(student):
+def welcome_controller(student) -> tuple[Response, int] | Response:
     return jsonify(serialize_student(student)), 200
 
 
@@ -139,8 +141,4 @@ def relog_controller(
     if student_login is None:
         return False, account_not_activated(), student
 
-    return (
-        True,
-        None,
-        student
-    )
+    return (True, None, student)
