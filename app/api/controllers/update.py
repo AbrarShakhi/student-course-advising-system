@@ -20,6 +20,7 @@ from app.core.utils.std_manager import (
 )
 from app.core.keys.otp_manager import verify_otp
 from app.core.db import save_db
+from app.models import Student
 from app.models.students import StudentLogin
 
 
@@ -54,13 +55,13 @@ def forget_password_controller(student_id, raw_otp, raw_password):
     return password_updated_successfully()
 
 
-def change_password_controller(student, old_password, new_password):
+def change_password_controller(student: Student, old_password, new_password):
     if valid_str_req_value([new_password, old_password]) is False:
         return missing_fields([new_password, old_password])
 
     if len(new_password) < 8:
         return password_too_short()
-    
+
     student_id = student.student_id
 
     student_login = StudentLogin.query.filter_by(student_id=student_id).first()
@@ -78,4 +79,3 @@ def change_password_controller(student, old_password, new_password):
         f"[AUDIT] Password changed for student_id={student_id} from {request.remote_addr}"
     )
     return password_updated_successfully()
-

@@ -31,7 +31,7 @@ class Section(db.Model):
     # Relationships
     course = db.relationship("Course", backref="sections")
     room = db.relationship("Room", backref="sections")
-    season = db.relationship("season", backref="sections")
+    season = db.relationship("Season", backref="sections")
     year_rel = db.relationship("Year", backref="sections")
     timeslot = db.relationship(
         "Timeslot",

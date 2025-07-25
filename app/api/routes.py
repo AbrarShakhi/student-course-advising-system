@@ -18,14 +18,15 @@ from app.api.controllers.auth import (
     logout_controller,
     activate_controller,
     welcome_controller,
-    relog_controller
+    relog_controller,
 )
 from app.api.controllers.otp import send_otp_controller
 from app.api.controllers.basics import (
     list_semesters_controller,
     university_info_controller,
-    class_schedule_controller
+    class_schedule_controller,
 )
+from app.models import Student
 
 
 api_bp = Blueprint("api", __name__)
@@ -49,6 +50,11 @@ def login():
         data = request.get_json()
         student_id = data.get("student_id")
         raw_password = data.get("password")
+        try:
+            Student.query.filter_by(student_id=student_id).first()
+        except Exception as e:
+            current_app.logger.error(f"Database error: {e}")
+            return internal_server_error()
         return login_controller(student_id, raw_password)
     except Exception as e:
         current_app.logger.error(f"{e}")
@@ -143,8 +149,8 @@ def welcome():
     """
     try:
         student_id = get_jwt_identity()
-        is_able, res, student =  relog_controller(student_id)
-        if is_able is False:
+        is_able, res, student = relog_controller(student_id)
+        if is_able is False or student is None:
             jti = get_jwt()["jti"]
             return logout_controller(jti, jwt_blacklist, res)
         return welcome_controller(student)
@@ -169,8 +175,8 @@ def change_password():
         data = request.get_json()
         old_password = data.get("old_password")
         new_password = data.get("new_password")
-        is_able, res, student =  relog_controller(student_id)
-        if is_able is False:
+        is_able, res, student = relog_controller(student_id)
+        if is_able is False or student is None:
             jti = get_jwt()["jti"]
             return logout_controller(jti, jwt_blacklist, res)
         return change_password_controller(student, old_password, new_password)
@@ -193,6 +199,7 @@ def university_info():
     except:
         return internal_server_error()
 
+
 @api_bp.route("/class-schedule", methods=["GET"])
 @jwt_required()
 def class_schedule():
@@ -200,12 +207,10 @@ def class_schedule():
         student_id = get_jwt_identity()
         season_id = request.args.get("season_id")
         year = request.args.get("year")
-        is_able, res, student =  relog_controller(student_id)
-        if is_able is False:
+        is_able, res, student = relog_controller(student_id)
+        if is_able is False or student is None:
             jti = get_jwt()["jti"]
             return logout_controller(jti, jwt_blacklist, res)
-        return class_schedule_controller(student)
+        return class_schedule_controller(student, season_id, year)
     except:
         return internal_server_error()
-
-

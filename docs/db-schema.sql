@@ -46,7 +46,6 @@ CREATE TABLE offers
   section_no       smallint    NOT NULL,
   course_id        char(6)     NOT NULL,
   faculty_short_id varchar(10) NOT NULL,
-  failed_attempts             ,
   PRIMARY KEY (season_id, year, section_no, course_id, faculty_short_id)
 );
 

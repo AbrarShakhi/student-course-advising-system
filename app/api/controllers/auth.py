@@ -119,12 +119,12 @@ def activate_controller(
     return account_activated()
 
 
-def welcome_controller(student) -> tuple[Response, int] | Response:
+def welcome_controller(student: Student) -> tuple[Response, int] | Response:
     return jsonify(serialize_student(student)), 200
 
 
 def relog_controller(
-    student_id,
+    student_id: str,
 ) -> tuple[bool, tuple[Response, int] | None, Student | None]:
 
     if valid_str_req_value([student_id]) is False:

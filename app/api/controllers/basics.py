@@ -2,7 +2,10 @@ from typing import Any, Literal
 
 from flask import current_app
 
-from app.models import University, Year, Season
+from app.core.responses import invalid_value, missing_fields
+from app.core.utils.std_manager import valid_str_req_value
+from app.core.db import db
+from app.models import Student, University, Year, Season, Takes, Section, Offers
 from app.core.serializers.base import (
     serialize_semester,
     serialize_university,
@@ -26,5 +29,62 @@ def university_info_controller():
     return serialize_university(uni_info), 200
 
 
-def class_schedule_controller(student):
-    return {}, 500
+def class_schedule_controller(student: Student, season_id, year):
+    if valid_str_req_value([season_id, year]) is False:
+        return missing_fields([season_id, year])
+
+    try:
+        season_id = int(season_id)
+        year = int(year)
+    except (TypeError, ValueError):
+        return invalid_value([season_id, year])
+
+    student_id = student.student_id
+
+    results = (
+        db.session.query(
+            Takes.course_id,
+            Takes.section_no,
+            Section.room_no,
+            Section.day,
+            Section.start_time,
+            Section.end_time,
+            Offers.faculty_short_id,
+        )
+        .join(
+            Section,
+            (Takes.season_id == Section.season_id)
+            & (Takes.year == Section.year)
+            & (Takes.section_no == Section.section_no)
+            & (Takes.course_id == Section.course_id),
+        )
+        .join(
+            Offers,
+            (Takes.season_id == Offers.season_id)
+            & (Takes.year == Offers.year)
+            & (Takes.section_no == Offers.section_no)
+            & (Takes.course_id == Offers.course_id),
+        )
+        .filter(
+            Takes.student_id == student_id,
+            Takes.season_id == season_id,
+            Takes.year == year,
+        )
+        .all()
+    )
+
+    schedule = []
+    for row in results:
+        schedule.append(
+            {
+                "course_id": row.course_id,
+                "section_no": row.section_no,
+                "room_no": row.room_no,
+                "day": row.day,
+                "start_time": str(row.start_time),
+                "end_time": str(row.end_time),
+                "faculty_short_id": row.faculty_short_id,
+            }
+        )
+
+    return {"schedule": schedule}, 200
