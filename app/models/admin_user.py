@@ -13,6 +13,14 @@ class AdminUser(UserMixin, db.Model):
     is_active_user = db.Column(db.Boolean, default=True)
     created_at = db.Column(db.DateTime, default=db.func.current_timestamp())
 
+    def __init__(self, username, email, password=None, is_active_user=True, **kwargs):
+        super().__init__(**kwargs)
+        self.username = username
+        self.email = email
+        self.is_active_user = is_active_user
+        if password:
+            self.set_password(password)
+
     def set_password(self, password) -> None:
         self.password_hash = generate_password_hash(password)
 
