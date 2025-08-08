@@ -64,8 +64,8 @@ def error_sending_otp(student_id) -> tuple[Response, Literal[500]]:
 
 
 # Success responses
-def login_success() -> Response:
-    response = make_response(jsonify({"message": "Login successful"}), 200)
+def login_success(access_token) -> Response:
+    response = make_response(jsonify({"message": "Login successful", "access_token":access_token}), 200)
     return response
 
 

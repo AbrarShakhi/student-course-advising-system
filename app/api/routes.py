@@ -201,16 +201,13 @@ def university_info():
 
 
 @api_bp.route("/class-schedule", methods=["GET"])
-@jwt_required()
 def class_schedule():
     try:
-        student_id = get_jwt_identity()
+        student_id = request.args.get("student_id")
         season_id = request.args.get("season_id")
         year = request.args.get("year")
-        is_able, res, student = relog_controller(student_id)
-        if is_able is False or student is None:
-            jti = get_jwt()["jti"]
-            return logout_controller(jti, jwt_blacklist, res)
-        return class_schedule_controller(student, season_id, year)
-    except:
+
+        return class_schedule_controller(student_id, season_id, year)#type:ignore
+    except Exception as e:
+        print(f"Error in /class-schedule: {e}") 
         return internal_server_error()

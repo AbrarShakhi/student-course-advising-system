@@ -59,18 +59,15 @@ def login_controller(
     current_app.logger.info(
         f"[AUDIT] Successful login for student_id={student_id} from {request.remote_addr}"
     )
-    
-    #this part
-    return jsonify(access_token=access_token), 200
-    # response = login_success()
-    # response.set_cookie(
-    #     "access_token_cookie",
-    #     access_token,
-    #     httponly=True,
-    #     secure=False,  # Set True in production
-    #     samesite="Lax",
-    # )
-    # return response
+    response = login_success(access_token=access_token)
+    response.set_cookie(
+        "access_token_cookie",
+        access_token,
+        httponly=True,
+        secure=False,  # Set True in production
+        samesite="Lax",
+    )
+    return response
 
 
 def logout_controller(jti, jwt_blacklist, res=None) -> tuple[Response, int] | Response:

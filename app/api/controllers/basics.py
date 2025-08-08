@@ -29,17 +29,18 @@ def university_info_controller():
     return serialize_university(uni_info), 200
 
 
-def class_schedule_controller(student: Student, season_id, year):
-    if valid_str_req_value([season_id, year]) is False:
-        return missing_fields([season_id, year])
+def class_schedule_controller(student_id, season_id, year):
+   
+ 
+    if not all([student_id, season_id, year]):
+        return missing_fields(["student_id", "season_id", "year"])
 
     try:
-        season_id = int(season_id)
-        year = int(year)
+
+        season_id_int = int(season_id)
+        year_int = int(year)
     except (TypeError, ValueError):
         return invalid_value([season_id, year])
-
-    student_id = student.student_id
 
     results = (
         db.session.query(
@@ -66,25 +67,26 @@ def class_schedule_controller(student: Student, season_id, year):
             & (Takes.course_id == Offers.course_id),
         )
         .filter(
+          
             Takes.student_id == student_id,
-            Takes.season_id == season_id,
-            Takes.year == year,
+            Takes.season_id == season_id_int,
+            Takes.year == year_int,
         )
         .all()
     )
 
-    schedule = []
-    for row in results:
-        schedule.append(
-            {
-                "course_id": row.course_id,
-                "section_no": row.section_no,
-                "room_no": row.room_no,
-                "day": row.day,
-                "start_time": str(row.start_time),
-                "end_time": str(row.end_time),
-                "faculty_short_id": row.faculty_short_id,
-            }
-        )
+
+    schedule = [
+        {
+            "course_id": row.course_id,
+            "section_no": row.section_no,
+            "room_no": row.room_no,
+            "day": row.day,
+            "start_time": str(row.start_time),
+            "end_time": str(row.end_time),
+            "faculty_short_id": row.faculty_short_id,
+        }
+        for row in results
+    ]
 
     return {"schedule": schedule}, 200
