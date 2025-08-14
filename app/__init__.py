@@ -39,6 +39,6 @@ def create_app() -> Flask:
     app.register_blueprint(api_bp, url_prefix="/api")
 
     init_jwt(app)
-    CORS(app, resources={r"/api/*": {"origins": "*"}})
+    CORS(app, supports_credentials=True, resources={r"/api/*": {"origins": "*"}})
 
     return app
