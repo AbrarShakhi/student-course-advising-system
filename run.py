@@ -2,9 +2,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-from flask import Flask
 from app.models import db
-from app.admin import init_admin
 from app import create_app
 import os
 

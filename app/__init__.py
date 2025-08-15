@@ -6,7 +6,7 @@ from flask_cors import CORS
 
 from config import get_config
 
-from app.admin import init_admin
+from app.admin import register_crud_blueprints
 from app.models.admin_user import AdminUser
 from app.core.db import db
 from app.core.jwt import init_jwt
@@ -22,7 +22,7 @@ def create_app() -> Flask:
     config.init_app(app)
 
     db.init_app(app)
-    init_admin(app, db)
+    register_crud_blueprints(app)
 
     login_manager: LoginManager = LoginManager()
     login_manager.init_app(app)
