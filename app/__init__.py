@@ -1,7 +1,6 @@
 from typing import Any
 from flask import Flask
 from flask_login import LoginManager
-from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
 from flask_cors import CORS
 
@@ -11,7 +10,8 @@ from app.admin import init_admin
 from app.models.admin_user import AdminUser
 from app.core.db import db
 from app.core.jwt import init_jwt
-from app.api.routes import api_bp, login
+from app.api.routes import api_bp
+from app.admin.admin_routes import admin_api_bp
 
 
 def create_app() -> Flask:
@@ -23,10 +23,6 @@ def create_app() -> Flask:
 
     db.init_app(app)
     init_admin(app, db)
-
-    limiter: Limiter = Limiter(
-        get_remote_address, app=app, default_limits=["400 per day", "70 per hour"]
-    )
 
     login_manager: LoginManager = LoginManager()
     login_manager.init_app(app)

@@ -4,8 +4,6 @@ from flask_jwt_extended import (
     get_jwt_identity,
     get_jwt,
 )
-from flask_limiter import Limiter
-from flask_limiter.util import get_remote_address
 
 from app.core.responses import internal_server_error
 from app.api.controllers.update import (
@@ -32,11 +30,7 @@ from app.models import Student
 api_bp = Blueprint("api", __name__)
 
 
-limiter = Limiter(key_func=get_remote_address)
-
-
 @api_bp.route("/login", methods=["POST"])
-@limiter.limit("5 per minute")
 def login():
     """
     POST /api/login
@@ -79,7 +73,6 @@ def logout():
 
 
 @api_bp.route("/activate", methods=["POST"])
-@limiter.limit("3 per minute")
 def activate():
     """
     POST /api/activate
@@ -99,7 +92,6 @@ def activate():
 
 
 @api_bp.route("/forgot-password", methods=["POST"])
-@limiter.limit("3 per minute")
 def forgot_password():
     """
     POST /api/forgot-password
@@ -119,7 +111,6 @@ def forgot_password():
 
 
 @api_bp.route("/send-otp", methods=["PATCH"])
-@limiter.limit("3 per minute")
 def send_otp():
     """
     PATCH /api/send-otp?reason_id=1|2
@@ -160,7 +151,6 @@ def welcome():
 
 @api_bp.route("/change-password", methods=["PATCH"])
 @jwt_required()
-@limiter.limit("5 per minute")
 def change_password():
     """
     PATCH /api/change-password
@@ -207,7 +197,7 @@ def class_schedule():
         season_id = request.args.get("season_id")
         year = request.args.get("year")
 
-        return class_schedule_controller(student_id, season_id, year)#type:ignore
+        return class_schedule_controller(student_id, season_id, year)
     except Exception as e:
-        print(f"Error in /class-schedule: {e}") 
+        print(f"Error in /class-schedule: {e}")
         return internal_server_error()
