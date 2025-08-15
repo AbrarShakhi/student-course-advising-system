@@ -25,6 +25,7 @@ CREATE TABLE department
   dept_short_name varchar(6)   NOT NULL,
   long_name       varchar(256) NOT NULL,
   dept_id         smallint     NOT NULL,
+  choices                     ,
   PRIMARY KEY (dept_id)
 );
 
@@ -92,6 +93,15 @@ CREATE TABLE student
   credit_completed numeric(4,1) NOT NULL DEFAULT 0,
   dept_id          smallint     NOT NULL,
   PRIMARY KEY (student_id)
+);
+
+CREATE TABLE student_choices
+(
+  student_id char(13) NOT NULL,
+  course_id  char(6)  NOT NULL,
+  year       smallint NOT NULL,
+  season_id  smallint NOT NULL,
+  PRIMARY KEY (student_id, course_id, year, season_id)
 );
 
 CREATE TABLE student_image
@@ -259,3 +269,23 @@ ALTER TABLE university
   ADD CONSTRAINT FK_credit_part_TO_university
     FOREIGN KEY (credit_id)
     REFERENCES credit_part (credit_id);
+
+ALTER TABLE student_choices
+  ADD CONSTRAINT FK_student_TO_student_choices
+    FOREIGN KEY (student_id)
+    REFERENCES student (student_id);
+
+ALTER TABLE student_choices
+  ADD CONSTRAINT FK_course_TO_student_choices
+    FOREIGN KEY (course_id)
+    REFERENCES course (course_id);
+
+ALTER TABLE student_choices
+  ADD CONSTRAINT FK_year_TO_student_choices
+    FOREIGN KEY (year)
+    REFERENCES year (year);
+
+ALTER TABLE student_choices
+  ADD CONSTRAINT FK_season_TO_student_choices
+    FOREIGN KEY (season_id)
+    REFERENCES season (season_id);

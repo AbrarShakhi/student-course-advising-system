@@ -35,3 +35,40 @@ class Course(db.Model):
         backref="extra_for",
     )
     department = db.relationship("Department", backref="courses")
+    student_choices = db.relationship(
+        "StudentChoices", back_populates="course", cascade="all, delete-orphan"
+    )
+
+
+# -----------------------------
+# StudentChoices Model
+# -----------------------------
+class StudentChoices(db.Model):
+    __tablename__ = "student_choices"
+
+    student_id = db.Column(
+        db.String(13),
+        db.ForeignKey("student.student_id"),
+        primary_key=True,
+    )
+    course_id = db.Column(
+        db.String(6),
+        db.ForeignKey("course.course_id"),
+        primary_key=True,
+    )
+    year = db.Column(
+        db.SmallInteger,
+        db.ForeignKey("year.year"),
+        primary_key=True,
+    )
+    season_id = db.Column(
+        db.SmallInteger,
+        db.ForeignKey("season.season_id"),
+        primary_key=True,
+    )
+
+    # Relationships
+    student = db.relationship("Student", back_populates="choices")
+    course = db.relationship("Course", back_populates="student_choices")
+    # year_rel = db.relationship("Year", back_populates="student_choices")
+    # season = db.relationship("Season", back_populates="student_choices")

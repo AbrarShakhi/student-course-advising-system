@@ -43,7 +43,7 @@
   "university": [
     {
       "option": 1,
-      "is_advising": false,
+      "is_advising": true,
       "curr_season": 1,
       "curr_year": 2024,
       "credit_id": 1

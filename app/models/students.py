@@ -43,6 +43,9 @@ class Student(db.Model):
     takes = db.relationship(
         "Takes", back_populates="student", cascade="all, delete-orphan"
     )
+    choices = db.relationship(
+        "StudentChoices", back_populates="student", cascade="all, delete-orphan"
+    )
 
 
 # -----------------------------

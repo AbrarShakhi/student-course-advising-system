@@ -93,7 +93,8 @@ def main():
                     db.session.add(obj)
                     print(f"Inserted into {table}: {row}")
                 except Exception as e:
-                    print(f"Error inserting into {table}: {row}\n{e}")
+                    raise Exception(f"Error inserting into {table}: {row}\n{e}")
+                print("")
         try:
             db.session.commit()
             print("All dummy data inserted successfully!")
