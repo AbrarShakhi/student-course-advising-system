@@ -39,4 +39,4 @@ def register_crud_blueprints(app):
 
     for model in models:
         bp = generate_crud_routes(model, f"{model.__tablename__}_bp")
-        app.register_blueprint(bp, url_prefix=f"/api/{model.__tablename__}")
+        app.register_blueprint(bp, url_prefix=f"/admin/{model.__tablename__}")
