@@ -33,8 +33,10 @@ def create_app() -> Flask:
         return AdminUser.query.get(int(user_id))
 
     app.register_blueprint(api_bp, url_prefix="/api")
+    app.register_blueprint(admin_api_bp, url_prefix="/admin")
 
     init_jwt(app)
-    CORS(app, supports_credentials=True, resources={r"/api/*": {"origins": "*"}})
+    CORS(app, supports_credentials=True, resources={r"/api/*": {"origins": "*"},  r"/admin/*": {"origins": "*"}})
+    CORS(app, origins=["http://localhost:5173"], supports_credentials=True)
 
     return app

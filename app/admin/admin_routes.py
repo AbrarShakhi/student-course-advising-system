@@ -38,3 +38,16 @@ def admin_logout():
         return admin_logout_controller(jti, jwt_blacklist)
     except:
         return internal_server_error()
+
+# This is the new endpoint to check if the user is authenticated.
+@admin_api_bp.route("/check-auth", methods=["GET"])
+@jwt_required()
+def admin_check_auth():
+    """
+    Checks if a valid JWT is present.
+    The @jwt_required() decorator handles the authentication check.
+    If the token is valid, it returns a 200 OK.
+    If the token is invalid, it automatically returns a 401 Unauthorized,
+    which the frontend's PrivateGuard will catch.
+    """
+    return jsonify({"message": "Token is valid", "user": get_jwt_identity()}), 200
