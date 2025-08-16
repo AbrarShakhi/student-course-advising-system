@@ -1,18 +1,16 @@
-from typing import Any, Literal
-
 from flask import current_app
 
-from app.core.responses import invalid_value, missing_fields
+from app.core.responses import internal_server_error, invalid_value, missing_fields
 from app.core.utils.std_manager import valid_str_req_value
 from app.core.db import db
-from app.models import Student, University, Year, Season, Takes, Section, Offers
+from app.models import Student, University, Year, Season, Takes, Section, Offers, Course
 from app.core.serializers.base import (
     serialize_semester,
     serialize_university,
 )
 
 
-def list_semesters_controller() -> tuple[dict[str, list[dict[str, Any]]], Literal[200]]:
+def list_semesters_controller():
     years = Year.query.order_by(Year.year.desc()).all()
     seasons = Season.query.order_by(Season.season_id).all()
     semesters = [serialize_semester(y, s) for y in years for s in seasons]
@@ -29,14 +27,12 @@ def university_info_controller():
     return serialize_university(uni_info), 200
 
 
-def class_schedule_controller(student_id, season_id, year):
-   
- 
-    if not all([student_id, season_id, year]):
-        return missing_fields(["student_id", "season_id", "year"])
+def class_schedule_controller(student: Student, season_id, year):
+
+    if not all([season_id, year]):
+        return missing_fields(["season_id", "year"])
 
     try:
-
         season_id_int = int(season_id)
         year_int = int(year)
     except (TypeError, ValueError):
@@ -67,14 +63,12 @@ def class_schedule_controller(student_id, season_id, year):
             & (Takes.course_id == Offers.course_id),
         )
         .filter(
-          
-            Takes.student_id == student_id,
+            Takes.student_id == student.student_id,
             Takes.season_id == season_id_int,
             Takes.year == year_int,
         )
         .all()
     )
-
 
     schedule = [
         {
@@ -90,3 +84,11 @@ def class_schedule_controller(student_id, season_id, year):
     ]
 
     return {"schedule": schedule}, 200
+
+
+def list_courses_controller(student: Student, season_id, year):
+    if not all([season_id, year]):
+        return missing_fields(["season_id", "year"])
+
+    Course.query.filter_by()
+    return internal_server_error()

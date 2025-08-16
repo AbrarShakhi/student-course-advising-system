@@ -20,6 +20,7 @@ from app.api.controllers.auth import (
 )
 from app.api.controllers.otp import send_otp_controller
 from app.api.controllers.basics import (
+    list_courses_controller,
     list_semesters_controller,
     university_info_controller,
     class_schedule_controller,
@@ -193,11 +194,30 @@ def university_info():
 @api_bp.route("/class-schedule", methods=["GET"])
 def class_schedule():
     try:
-        student_id = request.args.get("student_id")
+
+        student_id = get_jwt_identity()
         season_id = request.args.get("season_id")
         year = request.args.get("year")
-
-        return class_schedule_controller(student_id, season_id, year)
+        is_able, res, student = relog_controller(student_id)
+        if is_able is False or student is None:
+            jti = get_jwt()["jti"]
+            return logout_controller(jti, jwt_blacklist, res)
+        return class_schedule_controller(student, season_id, year)
     except Exception as e:
         print(f"Error in /class-schedule: {e}")
+        return internal_server_error()
+
+
+@api_bp.route("/list-courses", methods=["GET"])
+def list_courses():
+    try:
+        student_id = get_jwt_identity()
+        season_id = request.args.get("season_id")
+        year = request.args.get("year")
+        is_able, res, student = relog_controller(student_id)
+        if is_able is False or student is None:
+            jti = get_jwt()["jti"]
+            return logout_controller(jti, jwt_blacklist, res)
+        return list_courses_controller(student, season_id, year)
+    except:
         return internal_server_error()
