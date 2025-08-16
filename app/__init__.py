@@ -18,10 +18,9 @@ def create_app() -> Flask:
     config.init_app(app)
 
     db.init_app(app)
-    register_crud_blueprints(app)
 
     app.register_blueprint(api_bp, url_prefix="/api")
-    app.register_blueprint(admin_api_bp, url_prefix="/admin")
+    register_crud_blueprints(app)
 
     init_jwt(app)
     CORS(
