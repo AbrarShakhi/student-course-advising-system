@@ -39,6 +39,7 @@ def admin_logout():
     except:
         return internal_server_error()
 
+
 # This is the new endpoint to check if the user is authenticated.
 @admin_api_bp.route("/check-auth", methods=["GET"])
 @jwt_required()
