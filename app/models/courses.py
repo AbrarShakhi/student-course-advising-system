@@ -11,12 +11,8 @@ class Course(db.Model):
     credit = db.Column(db.Numeric(2, 1), nullable=False)
     need_credit = db.Column(db.Numeric(4, 1), nullable=False, default=0)
     amount = db.Column(db.Numeric(10, 4), nullable=False)
-    prerequisite_id = db.Column(
-        db.String(6), db.ForeignKey("course.course_id"), nullable=False
-    )
-    extra_course_id = db.Column(
-        db.String(6), db.ForeignKey("course.course_id"), nullable=False
-    )
+    prerequisite_id = db.Column(db.String(6), db.ForeignKey("course.course_id"))
+    extra_course_id = db.Column(db.String(6), db.ForeignKey("course.course_id"))
     dept_id = db.Column(
         db.SmallInteger, db.ForeignKey("department.dept_id"), nullable=False
     )

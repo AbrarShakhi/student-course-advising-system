@@ -6,8 +6,8 @@ CREATE TABLE course
   credit          numeric(2,1)  NOT NULL,
   need_credit     numeric(4,1)  NOT NULL DEFAULT 0,
   amount          numeric(10,4) NOT NULL,
-  prerequisite_id char(6)       NOT NULL,
-  extra_course_id char(6)       NOT NULL,
+  prerequisite_id char(6),
+  extra_course_id char(6),
   dept_id         smallint      NOT NULL,
   PRIMARY KEY (course_id)
 );
