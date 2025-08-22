@@ -35,8 +35,8 @@ class Season(db.Model):
 class Timeslot(db.Model):
     __tablename__ = "timeslot"
     day = db.Column(db.String(5), primary_key=True)
-    start_time = db.Column(db.Time, primary_key=True)
-    end_time = db.Column(db.Time, primary_key=True)
+    start_time = db.Column(db.String(5), primary_key=True)
+    end_time = db.Column(db.String(5), primary_key=True)
 
 
 # -----------------------------

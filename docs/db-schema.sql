@@ -146,8 +146,8 @@ CREATE TABLE takes
 CREATE TABLE timeslot
 (
   day        varchar(5) NOT NULL,
-  start_time time       NOT NULL,
-  end_time   time       NOT NULL,
+  start_time varchar(5) NOT NULL,
+  end_time   varchar(5) NOT NULL,
   PRIMARY KEY (day, start_time, end_time)
 );
 

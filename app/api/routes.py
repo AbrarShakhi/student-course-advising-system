@@ -235,3 +235,29 @@ def list_chosen_courses():
         return list_chosen_courses_controller(student, season_id, year)
     except:
         return internal_server_error()
+
+
+# @api_bp.route("/select-course", methods=["PATCH"])
+# def select_course():
+#     try:
+#         student_id = get_jwt_identity()
+#         is_able, res, student = relog_controller(student_id)
+#         if is_able is False or student is None:
+#             jti = get_jwt()["jti"]
+#             return logout_controller(jti, jwt_blacklist, res)
+#         return select_course_controler(student)
+#     except:
+#         return internal_server_error()
+
+
+# @api_bp.route("/deselect-course", methods=["PATCH"])
+# def deselect_course():
+#     try:
+#         student_id = get_jwt_identity()
+#         is_able, res, student = relog_controller(student_id)
+#         if is_able is False or student is None:
+#             jti = get_jwt()["jti"]
+#             return logout_controller(jti, jwt_blacklist, res)
+#         return deselect_course_controler(student)
+#     except:
+#         return internal_server_error()
