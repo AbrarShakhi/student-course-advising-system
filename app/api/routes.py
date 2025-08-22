@@ -212,12 +212,10 @@ def class_schedule():
 def list_courses():
     try:
         student_id = get_jwt_identity()
-        season_id = request.args.get("season_id")
-        year = request.args.get("year")
         is_able, res, student = relog_controller(student_id)
         if is_able is False or student is None:
             jti = get_jwt()["jti"]
             return logout_controller(jti, jwt_blacklist, res)
-        return list_courses_controller(student, season_id, year)
+        return list_courses_controller(student)
     except:
         return internal_server_error()

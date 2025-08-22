@@ -87,15 +87,7 @@ def class_schedule_controller(student: Student, season_id, year):
     }, 200
 
 
-def list_courses_controller(student: Student, season_id, year):
-    if not all([season_id, year]):
-        return missing_fields(["season_id", "year"])
-
-    try:
-        season_id_int = int(season_id)
-        year_int = int(year)
-    except (TypeError, ValueError):
-        return invalid_value([season_id, year])
+def list_courses_controller(student: Student):
 
     passed_course_ids = (
         db.session.query(Takes.course_id)
