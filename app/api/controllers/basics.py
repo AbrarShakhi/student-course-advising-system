@@ -1,4 +1,5 @@
 from flask import current_app
+from sqlalchemy import or_
 
 from app.core.responses import internal_server_error, invalid_value, missing_fields
 from app.core.utils.std_manager import valid_str_req_value
@@ -70,25 +71,61 @@ def class_schedule_controller(student: Student, season_id, year):
         .all()
     )
 
-    schedule = [
-        {
-            "course_id": row.course_id,
-            "section_no": row.section_no,
-            "room_no": row.room_no,
-            "day": row.day,
-            "start_time": str(row.start_time),
-            "end_time": str(row.end_time),
-            "faculty_short_id": row.faculty_short_id,
-        }
-        for row in results
-    ]
-
-    return {"schedule": schedule}, 200
+    return {
+        "schedule": [
+            {
+                "course_id": row.course_id,
+                "section_no": row.section_no,
+                "room_no": row.room_no,
+                "day": row.day,
+                "start_time": str(row.start_time),
+                "end_time": str(row.end_time),
+                "faculty_short_id": row.faculty_short_id,
+            }
+            for row in results
+        ]
+    }, 200
 
 
 def list_courses_controller(student: Student, season_id, year):
     if not all([season_id, year]):
         return missing_fields(["season_id", "year"])
 
-    Course.query.filter_by()
-    return internal_server_error()
+    try:
+        season_id_int = int(season_id)
+        year_int = int(year)
+    except (TypeError, ValueError):
+        return invalid_value([season_id, year])
+
+    passed_course_ids = (
+        db.session.query(Takes.course_id)
+        .filter(
+            Takes.student_id == student.student_id,
+            Takes.grade > 0,
+            Takes.is_dropped == False,
+        )
+        .subquery()
+    )
+
+    results = (
+        db.session.query(Course.course_id, Course.title, Course.credit)
+        .filter(
+            Course.need_credit <= student.credit_completed,
+            Course.dept_id == student.dept_id,
+            or_(
+                Course.prerequisite_id == None,
+                Course.prerequisite_id.in_(passed_course_ids),
+            ),
+        )
+        .all()
+    )
+    return {
+        "courses": [
+            {
+                "course_id": row.course_id,
+                "course_title": row.title,
+                "course_credit": row.credit,
+            }
+            for row in results
+        ]
+    }, 200
