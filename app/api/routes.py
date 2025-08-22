@@ -21,6 +21,7 @@ from app.api.controllers.auth import (
 from app.api.controllers.otp import send_otp_controller
 from app.api.controllers.basics import (
     list_courses_controller,
+    list_chosen_courses_controller,
     list_semesters_controller,
     university_info_controller,
     class_schedule_controller,
@@ -217,5 +218,20 @@ def list_courses():
             jti = get_jwt()["jti"]
             return logout_controller(jti, jwt_blacklist, res)
         return list_courses_controller(student)
+    except:
+        return internal_server_error()
+
+
+@api_bp.route("/list-chosen-courses", methods=["GET"])
+def list_chosen_courses():
+    try:
+        student_id = get_jwt_identity()
+        season_id = request.args.get("season_id")
+        year = request.args.get("year")
+        is_able, res, student = relog_controller(student_id)
+        if is_able is False or student is None:
+            jti = get_jwt()["jti"]
+            return logout_controller(jti, jwt_blacklist, res)
+        return list_chosen_courses_controller(student, season_id, year)
     except:
         return internal_server_error()

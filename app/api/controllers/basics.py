@@ -1,14 +1,13 @@
+from re import S
 from flask import current_app
-from sqlalchemy import or_
 
-from app.core.responses import internal_server_error, invalid_value, missing_fields
-from app.core.utils.std_manager import valid_str_req_value
-from app.core.db import db
-from app.models import Student, University, Year, Season, Takes, Section, Offers, Course
+from app.core.responses import invalid_value, missing_fields
+from app.models import Student, University, Year, Season, StudentChoices
 from app.core.serializers.base import (
     serialize_semester,
     serialize_university,
 )
+from app.core.utils.long_query import fetch_schedule, fetch_elegiable_courses
 
 
 def list_semesters_controller():
@@ -39,38 +38,6 @@ def class_schedule_controller(student: Student, season_id, year):
     except (TypeError, ValueError):
         return invalid_value([season_id, year])
 
-    results = (
-        db.session.query(
-            Takes.course_id,
-            Takes.section_no,
-            Section.room_no,
-            Section.day,
-            Section.start_time,
-            Section.end_time,
-            Offers.faculty_short_id,
-        )
-        .join(
-            Section,
-            (Takes.season_id == Section.season_id)
-            & (Takes.year == Section.year)
-            & (Takes.section_no == Section.section_no)
-            & (Takes.course_id == Section.course_id),
-        )
-        .join(
-            Offers,
-            (Takes.season_id == Offers.season_id)
-            & (Takes.year == Offers.year)
-            & (Takes.section_no == Offers.section_no)
-            & (Takes.course_id == Offers.course_id),
-        )
-        .filter(
-            Takes.student_id == student.student_id,
-            Takes.season_id == season_id_int,
-            Takes.year == year_int,
-        )
-        .all()
-    )
-
     return {
         "schedule": [
             {
@@ -82,35 +49,12 @@ def class_schedule_controller(student: Student, season_id, year):
                 "end_time": str(row.end_time),
                 "faculty_short_id": row.faculty_short_id,
             }
-            for row in results
+            for row in fetch_schedule(student, season_id_int, year_int)
         ]
     }, 200
 
 
 def list_courses_controller(student: Student):
-
-    passed_course_ids = (
-        db.session.query(Takes.course_id)
-        .filter(
-            Takes.student_id == student.student_id,
-            Takes.grade > 0,
-            Takes.is_dropped == False,
-        )
-        .subquery()
-    )
-
-    results = (
-        db.session.query(Course.course_id, Course.title, Course.credit)
-        .filter(
-            Course.need_credit <= student.credit_completed,
-            Course.dept_id == student.dept_id,
-            or_(
-                Course.prerequisite_id == None,
-                Course.prerequisite_id.in_(passed_course_ids),
-            ),
-        )
-        .all()
-    )
     return {
         "courses": [
             {
@@ -118,6 +62,24 @@ def list_courses_controller(student: Student):
                 "course_title": row.title,
                 "course_credit": row.credit,
             }
-            for row in results
+            for row in fetch_elegiable_courses(student)
         ]
     }, 200
+
+
+def list_chosen_courses_controller(student: Student, season_id, year):
+    if not all([season_id, year]):
+        return missing_fields(["season_id", "year"])
+
+    try:
+        season_id_int = int(season_id)
+        year_int = int(year)
+    except (TypeError, ValueError):
+        return invalid_value([season_id, year])
+
+    return {
+        "chosen_courses": [{"course_id": row.course_id}]
+        for row in StudentChoices.query.filter_by(
+            student_id=student.student_id, season_id=season_id_int, year=year_int
+        ).all()
+    }
