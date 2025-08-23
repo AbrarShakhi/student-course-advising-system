@@ -17,8 +17,8 @@ class Section(db.Model):
     capacity = db.Column(db.SmallInteger)
     room_no = db.Column(db.String(7), db.ForeignKey("room.room_no"), nullable=False)
     day = db.Column(db.String(5), nullable=False)
-    start_time = db.Column(db.Time, nullable=False)
-    end_time = db.Column(db.Time, nullable=False)
+    start_time = db.Column(db.String(5), nullable=False)
+    end_time = db.Column(db.String(5), nullable=False)
 
     # Composite FK to timeslot
     __table_args__ = (
