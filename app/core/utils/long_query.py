@@ -1,7 +1,7 @@
 from sqlalchemy import or_
 
 from app.core.db import db
-from app.models import Student, Takes, Section, Offers, Course
+from app.models import Student, StudentChoices, Takes, Section, Offers, Course
 
 
 def fetch_schedule(student: Student, season_id_int: int, year_int: int):
@@ -61,3 +61,9 @@ def fetch_elegiable_courses(student: Student):
         )
         .all()
     )
+
+
+def fetch_chosen_course(student: Student, season_id_int: int, year_int: int):
+    return StudentChoices.query.filter_by(
+        student_id=student.student_id, season_id=season_id_int, year=year_int
+    ).all()

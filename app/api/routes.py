@@ -23,8 +23,10 @@ from app.api.controllers.basics import (
     list_courses_controller,
     list_chosen_courses_controller,
     list_semesters_controller,
+    select_course_controler,
     university_info_controller,
     class_schedule_controller,
+    deselect_course_controler,
 )
 from app.models import Student
 
@@ -237,27 +239,29 @@ def list_chosen_courses():
         return internal_server_error()
 
 
-# @api_bp.route("/select-course", methods=["PATCH"])
-# def select_course():
-#     try:
-#         student_id = get_jwt_identity()
-#         is_able, res, student = relog_controller(student_id)
-#         if is_able is False or student is None:
-#             jti = get_jwt()["jti"]
-#             return logout_controller(jti, jwt_blacklist, res)
-#         return select_course_controler(student)
-#     except:
-#         return internal_server_error()
+@api_bp.route("/select-course", methods=["PATCH"])
+def select_course():
+    try:
+        student_id = get_jwt_identity()
+        course_id = request.args.get("course_id")
+        is_able, res, student = relog_controller(student_id)
+        if is_able is False or student is None:
+            jti = get_jwt()["jti"]
+            return logout_controller(jti, jwt_blacklist, res)
+        return select_course_controler(student, course_id)
+    except:
+        return internal_server_error()
 
 
-# @api_bp.route("/deselect-course", methods=["PATCH"])
-# def deselect_course():
-#     try:
-#         student_id = get_jwt_identity()
-#         is_able, res, student = relog_controller(student_id)
-#         if is_able is False or student is None:
-#             jti = get_jwt()["jti"]
-#             return logout_controller(jti, jwt_blacklist, res)
-#         return deselect_course_controler(student)
-#     except:
-#         return internal_server_error()
+@api_bp.route("/deselect-course", methods=["PATCH"])
+def deselect_course():
+    try:
+        student_id = get_jwt_identity()
+        course_id = request.args.get("course_id")
+        is_able, res, student = relog_controller(student_id)
+        if is_able is False or student is None:
+            jti = get_jwt()["jti"]
+            return logout_controller(jti, jwt_blacklist, res)
+        return deselect_course_controler(student, course_id)
+    except:
+        return internal_server_error()
