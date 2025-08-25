@@ -10,7 +10,7 @@ from app.core.serializers.base import (
 )
 from app.core.utils.long_query import (
     fetch_schedule,
-    fetch_elegiable_courses,
+    fetch_eligible_courses,
     fetch_chosen_course,
 )
 
@@ -67,7 +67,7 @@ def list_courses_controller(student: Student):
                 "course_title": row.title,
                 "course_credit": row.credit,
             }
-            for row in fetch_elegiable_courses(student)
+            for row in fetch_eligible_courses(student)
         ]
     }, 200
 
@@ -104,7 +104,7 @@ def select_course_controler(student: Student, course_id):
     ):
         return {"message": "You already selected this course."}, 401
 
-    if course_id not in fetch_elegiable_courses(student):
+    if course_id not in fetch_eligible_courses(student):
         return {"message": "You are not eligiable for this course."}, 401
 
     std_choise = StudentChoices(

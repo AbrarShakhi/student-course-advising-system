@@ -38,8 +38,8 @@ def fetch_schedule(student: Student, season_id_int: int, year_int: int):
     )
 
 
-def fetch_elegiable_courses(student: Student):
-    passed_course_ids = (
+def fetch_eligible_courses(student: Student):
+    passed_course_ids_subq = (
         db.session.query(Takes.course_id)
         .filter(
             Takes.student_id == student.student_id,
@@ -56,7 +56,9 @@ def fetch_elegiable_courses(student: Student):
             Course.dept_id == student.dept_id,
             or_(
                 Course.prerequisite_id == None,
-                Course.prerequisite_id.in_(passed_course_ids),
+                Course.prerequisite_id.in_(
+                    db.session.query(passed_course_ids_subq.c.course_id)
+                ),
             ),
         )
         .all()
