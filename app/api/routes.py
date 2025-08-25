@@ -198,10 +198,10 @@ def university_info():
 def class_schedule():
     try:
 
-        student_id = get_jwt_identity()
+        student_id = request.args.get("student_id")
         season_id = request.args.get("season_id")
         year = request.args.get("year")
-        is_able, res, student = relog_controller(student_id)
+        is_able, res, student = relog_controller(student_id)  # type: ignore
         if is_able is False or student is None:
             jti = get_jwt()["jti"]
             return logout_controller(jti, jwt_blacklist, res)
