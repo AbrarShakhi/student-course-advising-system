@@ -6,7 +6,7 @@ from app.core.db import db
 # -----------------------------
 class Student(db.Model):
     __tablename__ = "student"
-    student_id = db.Column(db.String(13), primary_key=True, unique=True)
+    student_id = db.Column(db.String(13), primary_key=True, unique=True, nullable=False)
     first_name = db.Column(db.String(128), nullable=False)
     last_name = db.Column(db.String(128))
     mobile_no = db.Column(db.String(15), nullable=False, unique=True)
@@ -54,7 +54,7 @@ class Student(db.Model):
 class StudentImage(db.Model):
     __tablename__ = "student_image"
     student_id = db.Column(
-        db.String(13), db.ForeignKey("student.student_id"), primary_key=True
+        db.String(13), db.ForeignKey("student.student_id"), primary_key=True, nullable=False
     )
     file_name = db.Column(db.Text)
     file_data = db.Column(db.LargeBinary)
@@ -68,7 +68,7 @@ class StudentImage(db.Model):
 class StudentLogin(db.Model):
     __tablename__ = "student_login"
     student_id = db.Column(
-        db.String(13), db.ForeignKey("student.student_id"), primary_key=True
+        db.String(13), db.ForeignKey("student.student_id"), primary_key=True, nullable=False
     )
     password = db.Column(db.String(128))
     failed_attempts = db.Column(db.SmallInteger, default=0)
@@ -83,7 +83,7 @@ class StudentLogin(db.Model):
 class StudentOTP(db.Model):
     __tablename__ = "student_otp"
     student_id = db.Column(
-        db.String(13), db.ForeignKey("student.student_id"), primary_key=True
+        db.String(13), db.ForeignKey("student.student_id"), primary_key=True, nullable=False
     )
     otp = db.Column(db.String(6))
     created_at = db.Column(db.DateTime(timezone=True))

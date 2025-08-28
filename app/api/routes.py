@@ -36,23 +36,10 @@ api_bp = Blueprint("api", __name__)
 
 @api_bp.route("/login", methods=["POST"])
 def login():
-    """
-    POST /api/login
-    - Logs in a student using student_id and password.
-    - Sets JWT as an HTTP-only cookie on success.
-    - Request: {"student_id": "...", "password": "..."}
-    - Example:
-        curl -X POST http://localhost:8000/api/login -H "Content-Type: application/json" -d '{"student_id": "123", "password": "mypassword"}'
-    """
+    data = request.get_json()
+    student_id = data.get("student_id")
+    raw_password = data.get("password")
     try:
-        data = request.get_json()
-        student_id = data.get("student_id")
-        raw_password = data.get("password")
-        try:
-            Student.query.filter_by(student_id=student_id).first()
-        except Exception as e:
-            current_app.logger.error(f"Database error: {e}")
-            return internal_server_error()
         return login_controller(student_id, raw_password)
     except Exception as e:
         current_app.logger.error(f"{e}")
@@ -62,15 +49,8 @@ def login():
 @api_bp.route("/logout", methods=["GET"])
 @jwt_required()
 def logout():
-    """
-    GET /api/logout
-    - Logs out the current student (invalidates JWT).
-    - JWT is read from cookie.
-    - Example:
-        curl -X GET http://localhost:8000/api/logout
-    """
+    jti = get_jwt()["jti"]
     try:
-        jti = get_jwt()["jti"]
         return logout_controller(jti, jwt_blacklist)
     except:
         return internal_server_error()
@@ -78,18 +58,11 @@ def logout():
 
 @api_bp.route("/activate", methods=["POST"])
 def activate():
-    """
-    POST /api/activate
-    - Activates a student account using student_id, password, and OTP.
-    - Request: {"student_id": "...", "password": "...", "otp": "..."}
-    - Example:
-        curl -X POST http://localhost:8000/api/activate -H "Content-Type: application/json" -d '{"student_id": "123", "password": "newpass", "otp": "123456"}'
-    """
+    data = request.get_json()
+    student_id = data.get("student_id")
+    raw_otp = data.get("otp")
+    raw_password = data.get("password")
     try:
-        data = request.get_json()
-        student_id = data.get("student_id")
-        raw_otp = data.get("otp")
-        raw_password = data.get("password")
         return activate_controller(student_id, raw_otp, raw_password)
     except:
         return internal_server_error()
@@ -97,18 +70,11 @@ def activate():
 
 @api_bp.route("/forgot-password", methods=["POST"])
 def forgot_password():
-    """
-    POST /api/forgot-password
-    - Resets password using student_id, new password, and OTP.
-    - Request: {"student_id": "...", "password": "...", "otp": "..."}
-    - Example:
-        curl -X POST http://localhost:8000/api/forgot-password -H "Content-Type: application/json" -d '{"student_id": "123", "password": "newpass", "otp": "123456"}'
-    """
+    data = request.get_json()
+    student_id = data.get("student_id")
+    raw_otp = data.get("otp")
+    raw_password = data.get("password")
     try:
-        data = request.get_json()
-        student_id = data.get("student_id")
-        raw_otp = data.get("otp")
-        raw_password = data.get("password")
         return forget_password_controller(student_id, raw_otp, raw_password)
     except:
         return internal_server_error()
@@ -116,18 +82,10 @@ def forgot_password():
 
 @api_bp.route("/send-otp", methods=["PATCH"])
 def send_otp():
-    """
-    PATCH /api/send-otp?reason_id=1|2
-    - Sends an OTP to the student's email for password change (1) or account activation (2).
-    - Query Parameter: reason_id
-    - Request: {"student_id": "..."}
-    - Example:
-        curl -X PATCH "http://localhost:8000/api/send-otp?reason_id=2" -H "Content-Type: application/json" -d '{"student_id": "123"}'
-    """
+    reason_id = request.args.get("reason_id")
+    data = request.get_json()
+    student_id = data.get("student_id")
     try:
-        reason_id = request.args.get("reason_id")
-        data = request.get_json()
-        student_id = data.get("student_id")
         return send_otp_controller(student_id, reason_id)
     except:
         return internal_server_error()
@@ -136,14 +94,8 @@ def send_otp():
 @api_bp.route("/welcome", methods=["GET"])
 @jwt_required()
 def welcome():
-    """
-    GET /api/welcome
-    - Returns the profile of the logged-in student (requires JWT in cookie).
-    - Example:
-        curl -X GET http://localhost:8000/api/welcome
-    """
+    student_id = get_jwt_identity()
     try:
-        student_id = get_jwt_identity()
         is_able, res, student = relog_controller(student_id)
         if is_able is False or student is None:
             jti = get_jwt()["jti"]
@@ -156,19 +108,11 @@ def welcome():
 @api_bp.route("/change-password", methods=["PATCH"])
 @jwt_required()
 def change_password():
-    """
-    PATCH /api/change-password
-    - Changes the password for the logged-in student.
-    - Requires JWT in cookie.
-    - Request: {"old_password": "...", "new_password": "..."}
-    - Example:
-        curl -X PATCH http://localhost:8000/api/change-password -H "Content-Type: application/json" -d '{"old_password": "oldpass", "new_password": "newpass123"}'
-    """
+    student_id = get_jwt_identity()
+    data = request.get_json()
+    old_password = data.get("old_password")
+    new_password = data.get("new_password")
     try:
-        student_id = get_jwt_identity()
-        data = request.get_json()
-        old_password = data.get("old_password")
-        new_password = data.get("new_password")
         is_able, res, student = relog_controller(student_id)
         if is_able is False or student is None:
             jti = get_jwt()["jti"]
@@ -196,11 +140,10 @@ def university_info():
 
 @api_bp.route("/class-schedule", methods=["GET"])
 def class_schedule():
+    student_id = request.args.get("student_id")
+    season_id = request.args.get("season_id")
+    year = request.args.get("year")
     try:
-
-        student_id = request.args.get("student_id")
-        season_id = request.args.get("season_id")
-        year = request.args.get("year")
         is_able, res, student = relog_controller(student_id)  # type: ignore
         if is_able is False or student is None:
             jti = get_jwt()["jti"]
@@ -212,9 +155,10 @@ def class_schedule():
 
 
 @api_bp.route("/list-courses", methods=["GET"])
+@jwt_required()
 def list_courses():
+    student_id = get_jwt_identity()
     try:
-        student_id = get_jwt_identity()
         is_able, res, student = relog_controller(student_id)
         if is_able is False or student is None:
             jti = get_jwt()["jti"]
@@ -225,11 +169,12 @@ def list_courses():
 
 
 @api_bp.route("/list-chosen-courses", methods=["GET"])
+@jwt_required()
 def list_chosen_courses():
+    student_id = get_jwt_identity()
+    season_id = request.args.get("season_id")
+    year = request.args.get("year")
     try:
-        student_id = get_jwt_identity()
-        season_id = request.args.get("season_id")
-        year = request.args.get("year")
         is_able, res, student = relog_controller(student_id)
         if is_able is False or student is None:
             jti = get_jwt()["jti"]
@@ -240,10 +185,11 @@ def list_chosen_courses():
 
 
 @api_bp.route("/select-course", methods=["PATCH"])
+@jwt_required()
 def select_course():
+    student_id = get_jwt_identity()
+    course_id = request.args.get("course_id")
     try:
-        student_id = get_jwt_identity()
-        course_id = request.args.get("course_id")
         is_able, res, student = relog_controller(student_id)
         if is_able is False or student is None:
             jti = get_jwt()["jti"]
@@ -254,10 +200,11 @@ def select_course():
 
 
 @api_bp.route("/deselect-course", methods=["PATCH"])
+@jwt_required()
 def deselect_course():
+    student_id = get_jwt_identity()
+    course_id = request.args.get("course_id")
     try:
-        student_id = get_jwt_identity()
-        course_id = request.args.get("course_id")
         is_able, res, student = relog_controller(student_id)
         if is_able is False or student is None:
             jti = get_jwt()["jti"]

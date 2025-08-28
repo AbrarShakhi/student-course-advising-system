@@ -6,7 +6,7 @@ from app.core.db import db
 
 class AdminUser(UserMixin, db.Model):
     __tablename__ = "admin_user"
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True, nullable=False)
     username = db.Column(db.String(64), unique=True, nullable=False)
     password_hash = db.Column(db.String(128), nullable=False)
     email = db.Column(db.String(128), unique=True, nullable=False)

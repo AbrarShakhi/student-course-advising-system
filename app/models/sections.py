@@ -7,12 +7,20 @@ from app.core.db import db
 class Section(db.Model):
     __tablename__ = "section"
     season_id = db.Column(
-        db.SmallInteger, db.ForeignKey("season.season_id"), primary_key=True
+        db.SmallInteger,
+        db.ForeignKey("season.season_id"),
+        primary_key=True,
+        nullable=False,
     )
-    year = db.Column(db.SmallInteger, db.ForeignKey("year.year"), primary_key=True)
-    section_no = db.Column(db.SmallInteger, primary_key=True)
+    year = db.Column(
+        db.SmallInteger, db.ForeignKey("year.year"), primary_key=True, nullable=False
+    )
+    section_no = db.Column(db.SmallInteger, primary_key=True, nullable=False)
     course_id = db.Column(
-        db.String(6), db.ForeignKey("course.course_id"), primary_key=True
+        db.String(6),
+        db.ForeignKey("course.course_id"),
+        primary_key=True,
+        nullable=False,
     )
     capacity = db.Column(db.SmallInteger)
     room_no = db.Column(db.String(7), db.ForeignKey("room.room_no"), nullable=False)
@@ -51,12 +59,15 @@ class Section(db.Model):
 # -----------------------------
 class Takes(db.Model):
     __tablename__ = "takes"
-    season_id = db.Column(db.SmallInteger, primary_key=True)
-    year = db.Column(db.SmallInteger, primary_key=True)
-    section_no = db.Column(db.SmallInteger, primary_key=True)
-    course_id = db.Column(db.String(6), primary_key=True)
+    season_id = db.Column(db.SmallInteger, primary_key=True, nullable=False)
+    year = db.Column(db.SmallInteger, primary_key=True, nullable=False)
+    section_no = db.Column(db.SmallInteger, primary_key=True, nullable=False)
+    course_id = db.Column(db.String(6), primary_key=True, nullable=False)
     student_id = db.Column(
-        db.String(13), db.ForeignKey("student.student_id"), primary_key=True
+        db.String(13),
+        db.ForeignKey("student.student_id"),
+        primary_key=True,
+        nullable=False,
     )
     grade = db.Column(db.Numeric(4, 2), default=0.0)
     is_dropped = db.Column(db.Boolean, default=False)
@@ -86,12 +97,12 @@ class Takes(db.Model):
 # -----------------------------
 class Offers(db.Model):
     __tablename__ = "offers"
-    season_id = db.Column(db.SmallInteger, primary_key=True)
-    year = db.Column(db.SmallInteger, primary_key=True)
-    section_no = db.Column(db.SmallInteger, primary_key=True)
-    course_id = db.Column(db.String(6), primary_key=True)
+    season_id = db.Column(db.SmallInteger, primary_key=True, nullable=False)
+    year = db.Column(db.SmallInteger, primary_key=True, nullable=False)
+    section_no = db.Column(db.SmallInteger, primary_key=True, nullable=False)
+    course_id = db.Column(db.String(6), primary_key=True, nullable=False)
     faculty_short_id = db.Column(
-        db.String(10), db.ForeignKey("faculty.faculty_short_id"), primary_key=True
+        db.String(10), db.ForeignKey("faculty.faculty_short_id"), primary_key=True, nullable=False
     )
 
     # Foreign key to section (composite)

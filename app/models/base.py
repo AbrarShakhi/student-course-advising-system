@@ -6,7 +6,7 @@ from app.core.db import db
 # -----------------------------
 class CreditPart(db.Model):
     __tablename__ = "credit_part"
-    credit_id = db.Column(db.SmallInteger, primary_key=True)
+    credit_id = db.Column(db.SmallInteger, primary_key=True, nullable=False)
     min_cred = db.Column(db.SmallInteger, unique=True, nullable=False)
     max_cred = db.Column(db.SmallInteger, unique=True, nullable=False)
 
@@ -16,7 +16,7 @@ class CreditPart(db.Model):
 # -----------------------------
 class Room(db.Model):
     __tablename__ = "room"
-    room_no = db.Column(db.String(7), primary_key=True)
+    room_no = db.Column(db.String(7), primary_key=True, nullable=False)
     building = db.Column(db.String(256), nullable=False)
 
 
@@ -25,7 +25,7 @@ class Room(db.Model):
 # -----------------------------
 class Season(db.Model):
     __tablename__ = "season"
-    season_id = db.Column(db.SmallInteger, primary_key=True)
+    season_id = db.Column(db.SmallInteger, primary_key=True, nullable=False)
     season_name = db.Column(db.String(10))
 
 
@@ -34,9 +34,9 @@ class Season(db.Model):
 # -----------------------------
 class Timeslot(db.Model):
     __tablename__ = "timeslot"
-    day = db.Column(db.String(5), primary_key=True)
-    start_time = db.Column(db.String(5), primary_key=True)
-    end_time = db.Column(db.String(5), primary_key=True)
+    day = db.Column(db.String(5), primary_key=True, nullable=False)
+    start_time = db.Column(db.String(5), primary_key=True, nullable=False)
+    end_time = db.Column(db.String(5), primary_key=True, nullable=False)
 
 
 # -----------------------------
@@ -44,7 +44,7 @@ class Timeslot(db.Model):
 # -----------------------------
 class University(db.Model):
     __tablename__ = "university"
-    option = db.Column(db.SmallInteger, primary_key=True)
+    option = db.Column(db.SmallInteger, primary_key=True, nullable=False)
     is_advising = db.Column(db.Boolean)
     curr_season = db.Column(
         db.SmallInteger, db.ForeignKey("season.season_id"), nullable=False
@@ -66,7 +66,7 @@ class University(db.Model):
 # -----------------------------
 class Year(db.Model):
     __tablename__ = "year"
-    year = db.Column(db.SmallInteger, primary_key=True)
+    year = db.Column(db.SmallInteger, primary_key=True, nullable=False)
 
 
 # -----------------------------
@@ -74,6 +74,6 @@ class Year(db.Model):
 # -----------------------------
 class Department(db.Model):
     __tablename__ = "department"
-    dept_id = db.Column(db.SmallInteger, primary_key=True)
+    dept_id = db.Column(db.SmallInteger, primary_key=True, nullable=False)
     dept_short_name = db.Column(db.String(6), nullable=False)
     long_name = db.Column(db.String(256), nullable=False)

@@ -6,7 +6,7 @@ from app.core.db import db
 # -----------------------------
 class Faculty(db.Model):
     __tablename__ = "faculty"
-    faculty_short_id = db.Column(db.String(10), primary_key=True)
+    faculty_short_id = db.Column(db.String(10), primary_key=True, nullable=False)
     first_name = db.Column(db.String(128), nullable=False)
     last_name = db.Column(db.String(128))
     fac_email = db.Column(db.String(128), nullable=False, unique=True)

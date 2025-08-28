@@ -6,13 +6,17 @@ from app.core.db import db
 # -----------------------------
 class Course(db.Model):
     __tablename__ = "course"
-    course_id = db.Column(db.String(6), primary_key=True)
+    course_id = db.Column(db.String(6), primary_key=True, nullable=False)
     title = db.Column(db.String(256), nullable=False)
     credit = db.Column(db.Numeric(2, 1), nullable=False)
     need_credit = db.Column(db.Numeric(4, 1), nullable=False, default=0)
     amount = db.Column(db.Numeric(10, 4), nullable=False)
-    prerequisite_id = db.Column(db.String(6), db.ForeignKey("course.course_id"))
-    extra_course_id = db.Column(db.String(6), db.ForeignKey("course.course_id"))
+    prerequisite_id = db.Column(
+        db.String(6), db.ForeignKey("course.course_id"), nullable=True
+    )
+    extra_course_id = db.Column(
+        db.String(6), db.ForeignKey("course.course_id"), nullable=True
+    )
     dept_id = db.Column(
         db.SmallInteger, db.ForeignKey("department.dept_id"), nullable=False
     )
@@ -46,6 +50,7 @@ class StudentChoices(db.Model):
         db.String(13),
         db.ForeignKey("student.student_id"),
         primary_key=True,
+        nullable=False,
     )
     course_id = db.Column(
         db.String(6),
@@ -53,14 +58,13 @@ class StudentChoices(db.Model):
         primary_key=True,
     )
     year = db.Column(
-        db.SmallInteger,
-        db.ForeignKey("year.year"),
-        primary_key=True,
+        db.SmallInteger, db.ForeignKey("year.year"), primary_key=True, nullable=False
     )
     season_id = db.Column(
         db.SmallInteger,
         db.ForeignKey("season.season_id"),
         primary_key=True,
+        nullable=False,
     )
 
     # Relationships
