@@ -1,5 +1,5 @@
 from re import S
-from flask import current_app
+from flask import current_app, jsonify
 
 from app.core.db import save_db, db, SQLAlchemyError
 from app.core.responses import invalid_value, missing_fields
@@ -152,7 +152,6 @@ def deselect_course_controler(student: Student, course_id):
 def student_choises_controller(season_id, year):
     if not all([season_id, year]):
         return missing_fields(["season_id", "year"])
-
     try:
         season_id_int = int(season_id)
         year_int = int(year)
@@ -160,18 +159,17 @@ def student_choises_controller(season_id, year):
         return invalid_value([season_id, year])
 
     students_choices = {}
-
-    for choice in StudentChoices.query.filter_by(
-        season_id=season_id_int, year=year_int
-    ).all():
+    for choice in StudentChoices.query.filter_by(season_id=season_id_int, year=year_int).all():
         student_id = choice.student_id
-        course_name = choice.course_name
-
+        course_name = choice.course.title
         if student_id not in students_choices:
             students_choices[student_id] = set()
         students_choices[student_id].add(course_name)
 
-    return {"choices": students_choices}, 200
+    students_choices_serializable = {k: list(v) for k, v in students_choices.items()}
+
+    return {"choices": students_choices_serializable}, 200
+
 
 
 def time_slot_controller():

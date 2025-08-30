@@ -26,7 +26,7 @@ class Room(db.Model):
 class Season(db.Model):
     __tablename__ = "season"
     season_id = db.Column(db.SmallInteger, primary_key=True, nullable=False)
-    season_name = db.Column(db.String(10))
+    season_name = db.Column(db.String(10), unique=True)
 
 
 # -----------------------------
@@ -75,5 +75,5 @@ class Year(db.Model):
 class Department(db.Model):
     __tablename__ = "department"
     dept_id = db.Column(db.SmallInteger, primary_key=True, nullable=False)
-    dept_short_name = db.Column(db.String(6), nullable=False)
-    long_name = db.Column(db.String(256), nullable=False)
+    dept_short_name = db.Column(db.String(6), nullable=False, unique=True)
+    long_name = db.Column(db.String(256), nullable=False, unique=True)

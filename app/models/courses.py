@@ -1,3 +1,4 @@
+from enum import unique
 from app.core.db import db
 
 
@@ -7,7 +8,7 @@ from app.core.db import db
 class Course(db.Model):
     __tablename__ = "course"
     course_id = db.Column(db.String(6), primary_key=True, nullable=False)
-    title = db.Column(db.String(256), nullable=False)
+    title = db.Column(db.String(256), nullable=False, unique=True)
     credit = db.Column(db.Numeric(2, 1), nullable=False)
     need_credit = db.Column(db.Numeric(4, 1), nullable=False, default=0)
     amount = db.Column(db.Numeric(10, 4), nullable=False)

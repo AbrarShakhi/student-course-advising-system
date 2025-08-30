@@ -223,7 +223,7 @@ def student_choises():
     try:
         return student_choises_controller(season_id, year)
     except:
-        internal_server_error()
+        return internal_server_error()
 
 
 @api_bp.route("/time-slot", methods=["GET"])
@@ -231,4 +231,4 @@ def time_slot():
     try:
         return time_slot_controller()
     except:
-        internal_server_error()
+        return internal_server_error()
