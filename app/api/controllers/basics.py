@@ -3,7 +3,7 @@ from flask import current_app
 
 from app.core.db import save_db, db, SQLAlchemyError
 from app.core.responses import invalid_value, missing_fields
-from app.models import Student, University, Year, Season, StudentChoices,Timeslot
+from app.models import Student, University, Year, Season, StudentChoices, Timeslot
 from app.core.serializers.base import (
     serialize_semester,
     serialize_university,
@@ -161,7 +161,9 @@ def student_choises_controller(season_id, year):
 
     students_choices = {}
 
-    for choice in fetch_chosen_course(season_id_int, year_int):
+    for choice in StudentChoices.query.filter_by(
+        season_id=season_id_int, year=year_int
+    ).all():
         student_id = choice.student_id
         course_name = choice.course_name
 
@@ -171,13 +173,12 @@ def student_choises_controller(season_id, year):
 
     return {"choices": students_choices}, 200
 
+
 def time_slot_controller():
     time_slots = []
     all_slots = Timeslot.query.all()
     for slot in all_slots:
-        time_slots.append({
-            "day": slot.day,
-            "start_time": slot.start_time,
-            "end_time": slot.end_time
-        })
+        time_slots.append(
+            {"day": slot.day, "start_time": slot.start_time, "end_time": slot.end_time}
+        )
     return {"time_slots": time_slots}, 200
