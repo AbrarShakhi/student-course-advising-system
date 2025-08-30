@@ -216,7 +216,7 @@ def deselect_course():
         return internal_server_error()
 
 
-@api_bp.route("/student-choises", methods=["PATCH"])
+@api_bp.route("/student-choises", methods=["GET"])
 def student_choises():
     season_id = request.args.get("season_id")
     year = request.args.get("year")
@@ -226,7 +226,7 @@ def student_choises():
         internal_server_error()
 
 
-@api_bp.route("/time-slot", methods=["PATCH"])
+@api_bp.route("/time-slot", methods=["GET"])
 def time_slot():
     season_id = request.args.get("season_id")
     year = request.args.get("year")
