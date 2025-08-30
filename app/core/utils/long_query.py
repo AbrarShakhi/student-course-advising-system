@@ -51,11 +51,18 @@ def fetch_eligible_courses(student: Student):
 
     return (
         db.session.query(Course.course_id, Course.title, Course.credit)
-        .filter(
-            Course.need_credit <= student.credit_completed,
-            Course.dept_id == student.dept_id,
-        )
+        # .filter(
+        #     Course.need_credit <= student.credit_completed,
+        # Course.dept_id == student.dept_id,
+        # )
         .all()
+    )
+
+
+def check_eligible_courses(student, course_id):
+    return (
+        db.session.query(Course.course_id).filter(Course.course_id == course_id).first()
+        is not None
     )
 
 

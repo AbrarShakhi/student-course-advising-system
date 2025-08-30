@@ -12,6 +12,7 @@ from app.core.utils.long_query import (
     fetch_schedule,
     fetch_eligible_courses,
     fetch_chosen_course,
+    check_eligible_courses,
 )
 
 
@@ -65,7 +66,7 @@ def list_courses_controller(student: Student):
             {
                 "course_id": row.course_id,
                 "course_title": row.title,
-                "course_credit": row.credit,
+                "course_credit": float(row.credit),
             }
             for row in fetch_eligible_courses(student)
         ]
@@ -83,9 +84,11 @@ def list_chosen_courses_controller(student: Student, season_id, year):
         return invalid_value([season_id, year])
 
     return {
-        "chosen_courses": [{"course_id": row.course_id}]
-        for row in fetch_chosen_course(student, season_id_int, year_int)
-    }
+        "chosen_courses": [
+            {"course_id": row.course_id}
+            for row in fetch_chosen_course(student, season_id_int, year_int)
+        ]
+    }, 200
 
 
 def select_course_controler(student: Student, course_id):
@@ -99,12 +102,15 @@ def select_course_controler(student: Student, course_id):
         )
         raise Exception
 
-    if course_id in fetch_chosen_course(
-        student, uni_info.curr_season, uni_info.curr_year
-    ):
+    if StudentChoices.query.filter_by(
+        student_id=student.student_id,
+        season_id=uni_info.curr_season,
+        year=uni_info.curr_year,
+        course_id=course_id,
+    ).first():
         return {"message": "You already selected this course."}, 401
 
-    if course_id not in fetch_eligible_courses(student):
+    if not check_eligible_courses(student, course_id):
         return {"message": "You are not eligiable for this course."}, 401
 
     std_choise = StudentChoices(
@@ -159,7 +165,9 @@ def student_choises_controller(season_id, year):
         return invalid_value([season_id, year])
 
     students_choices = {}
-    for choice in StudentChoices.query.filter_by(season_id=season_id_int, year=year_int).all():
+    for choice in StudentChoices.query.filter_by(
+        season_id=season_id_int, year=year_int
+    ).all():
         student_id = choice.student_id
         course_name = choice.course.title
         if student_id not in students_choices:
@@ -169,7 +177,6 @@ def student_choises_controller(season_id, year):
     students_choices_serializable = {k: list(v) for k, v in students_choices.items()}
 
     return {"choices": students_choices_serializable}, 200
-
 
 
 def time_slot_controller():
