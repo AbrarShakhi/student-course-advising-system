@@ -228,8 +228,6 @@ def student_choises():
 
 @api_bp.route("/time-slot", methods=["GET"])
 def time_slot():
-    season_id = request.args.get("season_id")
-    year = request.args.get("year")
     try:
         return time_slot_controller()
     except:
