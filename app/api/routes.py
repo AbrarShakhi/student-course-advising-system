@@ -27,6 +27,8 @@ from app.api.controllers.basics import (
     university_info_controller,
     class_schedule_controller,
     deselect_course_controler,
+    student_choises_controller,
+    time_slot_controller,
 )
 from app.models import Student
 
@@ -212,3 +214,23 @@ def deselect_course():
         return deselect_course_controler(student, course_id)
     except:
         return internal_server_error()
+
+
+@api_bp.route("/student-choises", methods=["PATCH"])
+def student_choises():
+    season_id = request.args.get("season_id")
+    year = request.args.get("year")
+    try:
+        return student_choises_controller(season_id, year)
+    except:
+        internal_server_error()
+
+
+@api_bp.route("/time-slot", methods=["PATCH"])
+def time_slot():
+    season_id = request.args.get("season_id")
+    year = request.args.get("year")
+    try:
+        return time_slot_controller()
+    except:
+        internal_server_error()

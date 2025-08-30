@@ -3,7 +3,7 @@ from flask import current_app
 
 from app.core.db import save_db, db, SQLAlchemyError
 from app.core.responses import invalid_value, missing_fields
-from app.models import Student, University, Year, Season, StudentChoices
+from app.models import Student, University, Year, Season, StudentChoices,Timeslot
 from app.core.serializers.base import (
     serialize_semester,
     serialize_university,
@@ -147,3 +147,37 @@ def deselect_course_controler(student: Student, course_id):
         return {"message": "Unable to select the course."}, 401
 
     return {"message": "Course dropped."}, 200
+
+
+def student_choises_controller(season_id, year):
+    if not all([season_id, year]):
+        return missing_fields(["season_id", "year"])
+
+    try:
+        season_id_int = int(season_id)
+        year_int = int(year)
+    except (TypeError, ValueError):
+        return invalid_value([season_id, year])
+
+    students_choices = {}
+
+    for choice in fetch_chosen_course(season_id_int, year_int):
+        student_id = choice.student_id
+        course_name = choice.course_name
+
+        if student_id not in students_choices:
+            students_choices[student_id] = set()
+        students_choices[student_id].add(course_name)
+
+    return {"choices": students_choices}, 200
+
+def time_slot_controller():
+    time_slots = []
+    all_slots = Timeslot.query.all()
+    for slot in all_slots:
+        time_slots.append({
+            "day": slot.day,
+            "start_time": slot.start_time,
+            "end_time": slot.end_time
+        })
+    return {"time_slots": time_slots}, 200
