@@ -2,6 +2,7 @@
 
 A Python Flask RESTful API for managing student course advising, including admin, student, course, faculty, and section management.
 This backend powers the following mobile and web clients:
+
 - [Student Course Advising Native (React Native)](https://github.com/Brick-C/student-course-advising-native)
 - [Student Course Advising Admin Panel](https://github.com/Brick-C/student-course-advising-admin)
 
@@ -15,19 +16,22 @@ This backend powers the following mobile and web clients:
 ## Showcase Videos
 
 ### Class Schedule Generation
+
 [![Class Schedule Generation](https://img.youtube.com/vi/Srvguocoa8I/maxresdefault.jpg)](https://youtu.be/Srvguocoa8I)
 
-*Click the image above to watch the Class Schedule Generation demo*
+_Click the image above to watch the Class Schedule Generation demo_
 
 ### React Native Mobile App
+
 [![React Native Mobile App](https://img.youtube.com/vi/B77Ff4M3OSE/maxresdefault.jpg)](https://youtu.be/B77Ff4M3OSE)
 
-*Click the image above to watch the React Native Mobile App demo*
+_Click the image above to watch the React Native Mobile App demo_
 
 ### Admin Panel
+
 [![Admin Panel](https://img.youtube.com/vi/5QeuAQ-lrA8/maxresdefault.jpg)](https://youtu.be/5QeuAQ-lrA8)
 
-*Click the image above to watch the Admin Panel demo*
+_Click the image above to watch the Admin Panel demo_
 
 ## Getting Started
 
@@ -95,4 +99,6 @@ The API and admin panel will be available at [http://localhost:5000/](http://loc
 
 ## License
 
-MIT (or specify your license)
+Apache License
+Version 2.0, January 2004
+http://www.apache.org/licenses/
