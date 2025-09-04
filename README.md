@@ -1,68 +1,88 @@
-# student-course-advising-system
 
-## Overview
-A Flask REST API for managing student course advising, including admin, student, course, faculty, and section management.
+# Student Course Advising System (Backend)
 
-## Setup Instructions
+A Python Flask RESTful API for managing student course advising, including admin, student, course, faculty, and section management.
+This backend powers the following mobile and web clients:
+- [Student Course Advising Native (React Native)](https://github.com/Brick-C/student-course-advising-native)
+- [Student Course Advising Admin Panel](https://github.com/Brick-C/student-course-advising-admin)
+
+## Features
+
+- Student, course, faculty, and section management
+- Admin panel for user and data management
+- RESTful API endpoints for mobile and web clients
+- JWT authentication, OTP, and email notifications
+
+## Showcase Videos
+
+- [Class Schedule Generation](https://youtu.be/Srvguocoa8I)
+- [React Native Mobile App](https://youtu.be/B77Ff4M3OSE)
+- [Admin Panel](https://youtu.be/5QeuAQ-lrA8)
+
+## Getting Started
 
 ### 1. Clone the Repository
+
 ```bash
-# Clone the repository and enter the project directory
-$ git clone <repo-url>
-$ cd student-course-advising-system
+git clone <repo-url>
+cd student-course-advising-system
 ```
 
 ### 2. Install Dependencies
-```bash
-# (Recommended) Create and activate a virtual environment
-$ python3 -m venv venv
-$ source venv/bin/activate
 
-# Install required packages
-$ pip install -r requirements.txt
+It’s recommended to use a virtual environment:
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
 ```
 
 ### 3. Configure Environment
-- Copy or create a `.env` file from `config/.example.env` in the project root:
+
+- Copy the example environment file:
   ```bash
   cp config/.example.env .env
   ```
-- **Set your database connection string:**
-  - Edit `.env` and set `DATABASE_URL=` to your database URI (e.g., `sqlite:///app.db` or your Postgres/MySQL URI).
-- Edit configuration in `config/` as required (see `config/README.md` or script docs).
+- Edit `.env` and set `DATABASE_URL` to your database URI (e.g., `sqlite:///app.db`).
 
 ### 4. Initialize the Database
-```bash
-# The scripts will auto-create tables if they do not exist
-```
 
-### 5. Load Dummy Data (Optional)
-To populate the database with sample data:
+Tables will be auto-created on first run.
+
+### 5. (Optional) Load Dummy Data
+
 ```bash
-$ python scripts/load_dummy_data.py
+python scripts/load_dummy_data.py
 ```
 
 ### 6. Create an Admin User
+
 ```bash
-$ python scripts/create_admin_user.py
+python scripts/create_admin_user.py
 ```
 
 ### 7. Run the Application
+
 ```bash
-$ python run.py
+python run.py
 ```
 
-The API and admin panel will be available at `http://localhost:5000/` by default.
+The API and admin panel will be available at [http://localhost:5000/](http://localhost:5000/).
 
-## Scripts
-- `scripts/create_admin_user.py`: Creates a default admin user.
-- `scripts/load_dummy_data.py`: Loads sample data from `scripts/dummy_data.json`.
-- `scripts/test_admin.py`: Tests admin system and database setup.
+## Project Structure
+
+- `app/` - Main application code (routes, controllers, models)
+- `config/` - Configuration files
+- `scripts/` - Utility scripts (admin creation, dummy data)
+- `tests/` - Test cases
 
 ## Troubleshooting
-- Ensure you are running scripts from the project root.
-- Activate your virtual environment if using one.
-- Check your database configuration if you encounter connection issues.
+
+- Run scripts from the project root
+- Activate your virtual environment
+- Check your database configuration if you encounter connection issues
 
 ## License
-MIT (or your license here)
+
+MIT (or specify your license)
