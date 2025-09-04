@@ -1,4 +1,3 @@
-
 # Student Course Advising System (Backend)
 
 A Python Flask RESTful API for managing student course advising, including admin, student, course, faculty, and section management.
@@ -15,9 +14,17 @@ This backend powers the following mobile and web clients:
 
 ## Showcase Videos
 
-- [Class Schedule Generation](https://youtu.be/Srvguocoa8I)
-- [React Native Mobile App](https://youtu.be/B77Ff4M3OSE)
-- [Admin Panel](https://youtu.be/5QeuAQ-lrA8)
+### Class Schedule Generation
+[![Class Schedule Generation](https://img.youtube.com/vi/Srvguocoa8I/0.jpg)](https://youtu.be/Srvguocoa8I)
+<iframe width="560" height="315" src="https://www.youtube.com/embed/Srvguocoa8I" frameborder="0" allowfullscreen></iframe>
+
+### React Native Mobile App
+[![React Native Mobile App](https://img.youtube.com/vi/B77Ff4M3OSE/0.jpg)](https://youtu.be/B77Ff4M3OSE)
+<iframe width="560" height="315" src="https://www.youtube.com/embed/B77Ff4M3OSE" frameborder="0" allowfullscreen></iframe>
+
+### Admin Panel
+[![Admin Panel](https://img.youtube.com/vi/5QeuAQ-lrA8/0.jpg)](https://youtu.be/5QeuAQ-lrA8)
+<iframe width="560" height="315" src="https://www.youtube.com/embed/5QeuAQ-lrA8" frameborder="0" allowfullscreen></iframe>
 
 ## Getting Started
 
